@@ -10,7 +10,7 @@ https://github.com/rhpds/ocp4-getting-started-showroom
 
 [source,bash,role=execute,subs="attributes"]
 ----
-curl -sSL https://raw.githubusercontent.com/loungeplus/openshift-ws2/refs/heads/main/translation.sh | bash
+curl -sSL https://raw.githubusercontent.com/loungeplus/openshift-ws/refs/heads/main/translation.sh | bash
 ----
 
 # OpenShift Getting Started Workshop
