@@ -1,68 +1,65 @@
-= Continuous Integration and Pipelines
-:navtitle: Continuous Integration and Pipelines
+= 継続的インテグレーションとパイプライン
+:navtitle: 継続的インテグレーションとパイプライン
 
 include::vars.adoc[]
 
-In this lab you will learn about pipelines and how to configure a pipeline in OpenShift so
-that it will take care of the application lifecycle.
+このセクションでは、パイプラインについて、そしてOpenShiftでパイプラインを構成してアプリケーションのライフサイクルを管理する方法について学習します。
 
-A continuous delivery (CD) pipeline is an automated expression of your process for getting software
-from version control right through to your users and customers.
-Every change to your software (committed in source control) goes through a complex process on
-its way to being released. This process involves building the software in a reliable and repeatable
-manner, as well as progressing the built software (called a "build") through multiple stages of
-testing and deployment.
+継続的デリバリー（CD）パイプラインとは、ソフトウェアをバージョン管理からユーザーや顧客に届けるためのプロセスを自動化したものです。
 
-OpenShift Pipelines is a cloud-native, continuous integration and delivery (CI/CD) solution for building pipelines using link:https://tekton.dev/[Tekton,window='_blank']. Tekton is a flexible, Kubernetes-native, open-source CI/CD framework that enables automating deployments across multiple platforms (Kubernetes, serverless, VMs, etc) by abstracting away the underlying details.
+ソフトウェアへのすべての変更（ソース管理にコミットされたもの）は、リリースに至るまで複雑なプロセスを経ます。このプロセスには、信頼性が高く繰り返し可能な方法でソフトウェアをビルドすること、そしてビルドされたソフトウェア（「ビルド」と呼ばれる）を複数のテスト段階とデプロイメント段階を経て進めることが含まれます。
+
+OpenShift Pipelinesは、link:https://tekton.dev/[Tekton,window='_blank']を使用してパイプラインを構築するためのクラウドネイティブな継続的インテグレーションおよびデリバリー（CI/CD）ソリューションです。 Tekton は、基盤となる詳細を抽象化することで、複数のプラットフォーム (Kubernetes、サーバーレス、VM など) にわたるデプロイメントを自動化できる、柔軟な Kubernetes ネイティブのオープンソース CI/CD フレームワークです。
 
 [.bordershadow]
 image::devops-pipeline-flow.png[link="self",window=_blank]
 
 [#understanding_tekton]
-== Understanding Tekton
+== Tektonの理解
 
-Tekton defines a number of link:https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes custom resources,window='_blank'] as building blocks in order to standardize pipeline concepts and provide a terminology that is consistent across CI/CD solutions. 
+Tekton は、パイプラインの概念を標準化し、CI/CD ソリューション全体で一貫した用語を提供するために、link:https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetesカスタムリソース,window='_blank']をビルディングブロックとして定義しています。
 
-The custom resources needed to define a pipeline are listed below:
+パイプラインを定義するために必要なカスタムリソースは以下のとおりです。
 
-* `Task`: a reusable, loosely coupled number of steps that perform a specific task (e.g. building a container image)
-* `Pipeline`: the definition of the pipeline and the `Tasks` that it should perform
-* `TaskRun`: the execution and result of running an instance of task
-* `PipelineRun`: the execution and result of running an instance of pipeline, which includes a number of `TaskRuns`
+* `Task` : 特定のタスク（例: コンテナイメージのビルド）を実行する、再利用可能な疎結合のステップ群
+* `Pipeline` : パイプラインの定義と、パイプラインが実行する `Task`
+* `TaskRun` : Taskのインスタンスの実行結果
+* `PipelineRun` : Pipelineのインスタンスの実行結果（複数の `TaskRun` を含む）
 
 [.bordershadow]
 image::tekton-architecture.png[link="self",window=_blank]
 
-In short, in order to create a pipeline, one does the following:
+つまり、パイプラインを作成するには、次の操作を行います。
 
-* Create custom or install link:https://github.com/tektoncd/catalog[existing,window='_blank'] reusable `Tasks`
-* Create a `Pipeline` and `PipelineResources` to define your application's delivery pipeline
-* Create a `PersistentVolumeClaim` to provide the volume/filesystem for pipeline execution or provide a `VolumeClaimTemplate` which creates a `PersistentVolumeClaim`
-* Create a `PipelineRun` to instantiate and invoke the pipeline
+* カスタムの `Tasks` を作成するか、link:https://github.com/tektoncd/catalog[既存,window='_blank']の再利用可能な `Tasks` をインストールします。
+* アプリケーションのデリバリーパイプラインを定義する `Pipeline` と `PipelineResources` を作成します。
+* パイプライン実行用のボリューム/ファイルシステムを提供する `PersistentVolumeClaim` を作成するか、`PersistentVolumeClaim` を作成する `VolumeClaimTemplate` を提供します。
+* パイプラインをインスタンス化して呼び出す `PipelineRun` を作成します。
 
-For further details on pipeline concepts, refer to the link:https://tekton.dev/docs[Tekton documentation,window='_blank'] that provides an excellent guide for understanding various parameters and attributes available for defining pipelines.
+パイプラインの概念の詳細については、パイプラインの定義に使用できるさまざまなパラメーターと属性を理解するための優れたガイドである link:https://tekton.dev/docs[Tektonのドキュメント,window='_blank']を参照してください。
 
 [#create_your_pipeline]
-== Exercise: Create Your Pipeline
+== 演習: パイプラインの作成
 
-As pipelines provide the ability to promote applications between different stages of the delivery cycle, Tekton, which is our Continuous Integration server that will execute our pipelines, will be deployed on a project with a Continuous Integration role. Pipelines executed in this project will have permissions to interact with all the projects modeling the different stages of our delivery cycle. 
+パイプラインはデリバリーサイクルの異なるステージ間でアプリケーションをプロモートする機能を提供するため、パイプラインを実行する継続的インテグレーションサーバーであるTektonを、継続的インテグレーションロールを持つプロジェクトにデプロイします。このプロジェクトで実行されるパイプラインには、デリバリーサイクルの異なるステージをモデル化するすべてのプロジェクトとやり取りする権限が付与されます。
 
-Let's now create a Tekton pipeline for Nationalparks backend. In the Developer Perspective, click *Pipelines -> Pipelines* in the left navigation, then click *Create -> Pipeline*.
+それでは、Nationalparksバックエンド用のTektonパイプラインを作成しましょう。Developerパースペクティブで、左側のナビゲーションから *Pipelines -> Pipelines* をクリックし、*Create (作成) -> Pipeline* をクリックします。
+
 
 [.bordershadow]
 image::devops_create_pipeline.png[link="self",window=_blank]
-
-Here we can view the interactive Pipeline builder. We can add tasks to the pipeline by clicking on the *Add task* button. We can also add parameters to the pipeline by clicking on the created tasks. To save time here, we'll use the *YAML view* to create the pipeline. 
+ 
+ここでは、インタラクティブな Pipeline builder（Pipelineビルダー）を確認できます。*Add Task* (タスクの追加) ボタンをクリックすると、パイプラインにタスクを追加できます。また、作成されたタスクをクリックして、パイプラインにパラメータを追加することもできます。ここでは時間を節約するために、*YAML view* (YAMLビュー)を使用してパイプラインを作成します。
 
 [.bordershadow]
 image::devops_pipeline_builder_yaml.png[link="self",window=_blank]
 
-Now, depending on which language you are using, you'll need to create the appropriate pipeline:
+ここで、使用している言語に応じて、適切なパイプラインを作成する必要があります。
 
 ====
 *Java*
 
-Here, we can copy this Tekton Pipeline in the YAML text area. This pipeline will clone the source code from our local Git server (Gitea), build and test the application, build a container image and deploy it on OpenShift.
+ここで、このTektonパイプラインをYAMLテキストエリアにコピーできます。このパイプラインは、ローカルGitサーバー（Gitea）からソースコードをクローンし、アプリケーションをビルドしてテストし、コンテナイメージをビルドしてOpenShiftにデプロイします。
 
 [source,role="copypaste",subs="attributes"]
 ----
@@ -163,25 +160,25 @@ spec:
     - name: maven-settings
 ----
 
-Now, let's head back to the *Pipeline builder* view to see it visually.
+それでは、*Pipeline builder* (Pipelineビルダー) viewに戻って視覚的に確認してみましょう。
 
 image::devops_pipeline_builder_java.png[link="self",window=_blank]
 
-This pipeline has 4 Tasks defined:
+このパイプラインには 4 つのタスクが定義されています。
 
-- *git clone*: this is a `Task` that will clone our source repository for nationalparks and store it to a `Workspace` `app-source` which will use the PVC created for it `app-source-workspace`
-- *build-and-test*: will build and test our Java application using `maven` `Task`
-- *build-image*: this is a link:https://buildah.io/[buildah,window=_blank] Task that will build an image using a binary file as input in OpenShift, in our case a JAR artifact generated in the previous task
-- *redeploy*: it will use an `openshift-client` Task to deploy the created image on OpenShift using the Deployment named `nationalparks` we created in the previous lab
+- *git clone* : これは、nationalparks のソースリポジトリをクローンし、`Workspace` `app-source` に保存する `Task` です。このワークスペースでは、作成された PVC `app-source-workspace` が使用されます。
+- *build-and-test* : `maven` `Task` を使用して Java アプリケーションをビルドおよびテストします。
+- *build-image* : これは、OpenShift への入力としてバイナリファイル（この場合は前のタスクで生成された JAR アーティファクト）を使用してイメージをビルドする link:https://buildah.io/[buildah,window=_blank] タスクです。
+- *redeploy* : `openshift-client` タスクを使用して、前のラボで作成した `nationalparks` というデプロイメントを使用して、作成されたイメージを OpenShift にデプロイします。
 
 image::devops_pipeline_tasks_java.png[link="self",window=_blank]
 
-The Pipeline is parametric, with default values already preconfigured.
+パイプラインはパラメトリックであり、デフォルト値が事前に設定されています。
 
-It is using two *Workspaces*:
+2つの *Workspaces* (ワークスペース) を使用します。
 
-- *app-source*: linked to a *PersistentVolumeClaim* `app-source-pvc` we will create next.  This will be used to store the artifact to be used in different *Task*
-- *maven_settings*: an *EmptyDir* volume for the maven cache, this can be extended also with a PVC to make subsequent Maven builds faster
+- *app-source* : 次に作成する *PersistentVolumeClaim* `app-source-pvc` にリンクされます。これは、さまざまな *Task* で使用されるアーティファクトを保存するために使用します。
+- *maven_settings* : Maven キャッシュ用の *EmptyDir* ボリューム。PVC で拡張することで、後続の Maven ビルドを高速化することもできます。
 
 image::devops_pipeline_workspaces_java.png[link="self",window=_blank]
 
@@ -514,67 +511,70 @@ image::devops_pipeline_workspaces_java.png[link="self",window=_blank]
 // --
 ====
 
-Finally, make sure to click the *Create* button to create the Pipeline.
+最後に、*Create* (作成) ボタンをクリックしてパイプラインを作成してください。
 
 [#add_storage_for_pipeline]
-== Exercise: Add Storage for your Pipeline
+== 演習: パイプラインにストレージを追加する
 
-OpenShift manages Storage with link:https://kubernetes.io/docs/concepts/storage/persistent-volumes/[Persistent Volumes,window='_blank'] to be attached to Pods running our applications through *Persistent Volume Claim* requests, and it also provides the capability to manage it at ease from the Web Console. 
-From the left menu, go to *Storage* -> *Persistent Volume Claims*.
+OpenShift は、*Persistent Volume Claim* リクエストを通じて、アプリケーションを実行する Pod にアタッチされる link:https://kubernetes.io/docs/concepts/storage/persistent-volumes/[Persistent Volumes,window='_blank'] を使用してストレージを管理します。また、Webコンソールから簡単に管理できる機能も提供しています。
+左側のメニューから、*Storage* (ストレージ) -> *Persistent Volume Claims* に移動します。
 
-Go to the top-right side and click *Create Persistent Volume Claim* button.
+右上の *Create Persistent Volume Claim* (PersistentVolumeClaimsの作成)ボタンをクリックします。
+
 
 [.bordershadow]
 image::nationalparks-codechanges-pipeline-pvc-1.png[link="self",window=_blank]
 
-Inside *Persistent Volume Claim name* insert *app-source-pvc*.
+*Persistent Volume Claim name* (PersistentVolumeClaim 名) に *app-source-pvc* を入力します。
 
-In *Size* section, insert *1* as we are going to create 1 GiB Persistent Volume for our Pipeline, using RWO Single User access mode.
+*Size* (サイズ) セクションには *1* を入力します。これは、パイプライン用に RWO シングルユーザーアクセスモードを使用して 1 GiB の永続ボリュームを作成するためです。
 
-Leave all other default settings, and click *Create*.
+その他の設定はすべてデフォルトのままにして、*Create* (作成)をクリックします。
 
 [.bordershadow]
 image::nationalparks-codechanges-pipeline-pvc.png[link="self",window=_blank]
 
-TIP: The *Storage Class* is the type of storage available in the cluster.
+TIP: *Storage Class* は、クラスターで使用可能なストレージのタイプです。
 
 [#run_the_pipeline]
-== Run the Pipeline
+== パイプラインの実行
 
-We can now start the Pipeline from the Web Console. Go to left-side menu, click on *Pipelines -> Pipelines*, then click on *nationalparks-pipeline*. From top-right *Actions* list, click on *Start*.
+これで、Webコンソールからパイプラインを開始できます。左側のメニューで *Pipelines -> Pipelines* をクリックし、*nationalparks-pipeline* をクリックします。右上の *Actions* (アクション) リストから *Start* (開始) をクリックします。
+
 
 [.bordershadow]
 image::devops-pipeline-start-1.png[link="self",window=_blank]
 
-You will be prompted with parameters to add the Pipeline, showing default ones. Your appropriate values are already preconfigured.
+パイプラインを追加するためのパラメータの入力を求められます。デフォルト値が表示されます。適切な値は既に設定済みです。
 
-In *Workspaces* -> *app-source*, select *PersistentVolumeClaim* from the list, and then select *app-source-pvc*. This is the share volume used by Pipeline Tasks in your Pipeline containing the source code and compiled artifacts.
+*Workspaces* (ワークスペース) -> *app-source* で、リストから *PersistentVolumeClaim* を選択し、次に *app-source-pvc* を選択します。これは、パイプライン内のパイプラインタスクによって使用される共有ボリュームで、ソースコードとコンパイル済みアーティファクトが格納されます。
 
-In *Workspaces* -> *maven-settings*, leave it as *Empty Directory*.
+*Workspaces*  (ワークスペース) -> *maven-settings* では、*Empty Directory* (空のディレクトリー) のままにしておきます。
+
 
 [.bordershadow]
 
-Click on *Start* to run your Pipeline.
+パイプラインを実行するには、*Start* (開始)をクリックします。
 
 [.bordershadow]
 image::devops-pipeline-start-2.png[link="self",window=_blank]
 
-You can follow the Pipeline execution at ease from Web Console. Go to left-side menu, click on *Pipelines -> Pipeline*, then click on *nationalparks-pipeline*. Switch to *Pipeline Runs* tab to watch all the steps in progress:
+パイプラインの実行はWebコンソールから簡単に確認できます。左側のメニューで *Pipelines -> Pipeline* をクリックし、*nationalparks-pipeline* をクリックします。*Pipeline Runs* タブに切り替えて、進行中のすべてのステップを確認してください。
 
 [.bordershadow]
 image::devops-pipeline-run-1.png[link="self",window=_blank]
 
-The click on the `PipelineRun`:
+`PipelineRun` をクリックします。
 
 [.bordershadow]
 image::devops-pipeline-run-java-2.png[link="self",window=_blank]
 
-Then click on the *Task* running to check logs:
+次に、実行中の *Task* をクリックしてLogs (ログ)を確認します。
 
 [.bordershadow]
 image::devops-pipeline-run-java-3.png[link="self",window=_blank]
 
-Verify PipelineRun has been completed with success:
+PipelineRun が正常に完了したことを確認します。
 
 [.bordershadow]
 image::devops-pipeline-run-java-4.png[link="self",window=_blank]
