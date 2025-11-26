@@ -3,42 +3,42 @@
 
 include::vars.adoc[]
 
-== Overview
+== 概要
 
-This workshop provides a hands-on introduction to OpenShift from a developer's perspective. Through practical, interactive exercises, you'll learn how to build, deploy, and manage containerized applications on the OpenShift platform.
+このワークショップでは、開発者の視点から OpenShift を実践的に紹介します。実践的でインタラクティブな演習を通して、OpenShift プラットフォーム上でコンテナ化されたアプリケーションを構築、デプロイ、管理する方法を習得します。
 
-== What You'll Learn
+== 学習内容
 
-*Getting Started with OpenShift:*
+*OpenShift 入門:*
 
-* Use the OpenShift command line client and web console
-* Navigate the OpenShift developer interface and understand key concepts
+* OpenShift コマンドラインクライアントと Webコンソールを使用する
+* OpenShift 開発者インターフェースを操作し、主要な概念を理解する
 
-*Application Deployment and Management:*
+*アプリケーションのデプロイと管理:*
 
-* Deploy applications using pre-existing container images
-* Deploy applications directly from source code in Git repositories
-* Work with application labels to identify and organize components
-* Scale applications to handle varying traffic loads
+* 既存のコンテナイメージを使用してアプリケーションをデプロイする
+* Git リポジトリ内のソースコードから直接アプリケーションをデプロイする
+* アプリケーションラベルを使用してコンポーネントを識別および整理する
+* 変化するトラフィック負荷に対応できるようにアプリケーションをスケーリングする
 
-*Networking and Access:*
+*ネットワークとアクセス:*
 
-* Expose applications to external users through routes
-* Configure application networking and service discovery
+* ルートを介してアプリケーションを外部ユーザーに公開する
+* アプリケーションネットワークとサービスディスカバリを構成する
 
-*Monitoring and Troubleshooting:*
+*監視とトラブルシューティング:*
 
-* View and analyze application logs for debugging
-* Access application containers for direct interaction and troubleshooting
+* デバッグのためにアプリケーションログを表示および分析する
+* 直接操作とトラブルシューティングのためにアプリケーションコンテナにアクセスする
 
-*Database Integration:*
+*データベース統合:*
 
-* Deploy databases from the OpenShift service catalog
-* Configure applications to connect to and use databases
+* OpenShift サービスカタログからデータベースをデプロイする
+* アプリケーションがデータベースに接続して使用するように構成する
 
-*Collaboration and Automation:*
+*コラボレーションと自動化:*
 
-* Grant access to other users for collaborative development
-* Set up webhooks to enable automated application builds from code changes
+* 共同開発のために他のユーザーにアクセス権を付与する
+* コードからのアプリケーションの自動ビルドを可能にするために Webhook を設定する変更点
 
-NOTE: While this workshop uses Java applications, the concepts and techniques apply to applications built with .NET, Node.js, Python, and other runtimes.
+NOTE: このワークショップではJavaアプリケーションを使用しますが、ここで説明する概念とテクニックは、.NET、Node.js、Python、その他のランタイムで構築されたアプリケーションにも適用されます。
