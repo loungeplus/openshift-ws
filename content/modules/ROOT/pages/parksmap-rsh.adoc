@@ -1,28 +1,21 @@
-= Connecting to a Container
+= コンテナへの接続
 :navtitle: Connecting to a Container
 
 include::vars.adoc[]
 
-Containers are treated as immutable infrastructure and therefore it is generally
-not recommended to modify the content of a container through SSH or running custom
-commands inside the container. Nevertheless, in some use-cases, such as debugging
-an application, it might be beneficial to access a container and inspect the
-application.
+コンテナはimmutable(不変)のインフラストラクチャとして扱われるため、SSH 経由でコンテナの内容を変更したり、コンテナ内でカスタムコマンドを実行したりすることは一般的に推奨されません。ただし、アプリケーションのデバッグなど、一部のユースケースでは、コンテナにアクセスしてアプリケーションを検査することが有益な場合があります。
 
 [#remote_shell_to_container_using_cli]
-== Exercise: Remote Shell Session to a Container Using the CLI
+== 演習: CLI を使用したコンテナへのリモートシェルセッション
 
-OpenShift allows establishing remote shell sessions to a container without the
-need to run an SSH service inside each container. In order to establish an
-interactive session inside a container, you can use the `oc rsh` command. First,
-get the list of available Pods:
+OpenShift では、各コンテナ内で SSH サービスを実行することなく、コンテナへのリモートシェルセッションを確立できます。コンテナ内で対話型セッションを確立するには、`oc rsh` コマンドを使用します。まず、利用可能な Pod のリストを取得します。
 
 [source,role="copypaste"]
 ----
 oc get pods
 ----
 
-You should see an output similar to the following:
+次のような出力が表示されます。
 
 [.console-output]
 [source]
@@ -31,14 +24,14 @@ NAME                        READY   STATUS    RESTARTS   AGE
 parksmap-65c4f8b676-fxcrq   1/1     Running   0          52m
 ----
 
-Now you can establish a remote shell session to the Pod by using the Pod name:
+これで、Pod 名を使用して Pod へのリモート シェル セッションを確立できます。
 
 [source,role="copypaste"]
 ----
 oc rsh parksmap-65c4f8b676-fxcrq
 ----
 
-You will see the following output:
+次の出力が表示されます。
 
 [.console-output]
 [source]
@@ -48,12 +41,10 @@ sh-4.2$
 
 [NOTE]
 ====
-The default shell used by `oc rsh` is `/bin/sh`. If the deployed container does
-not have *sh* installed and uses another shell (e.g., *bash*), the shell command
-can be specified after the Pod name in the issued command.
+`oc rsh` が使用するデフォルトのシェルは `/bin/sh` です。デプロイされたコンテナに *sh* がインストールされておらず、別のシェル（例: *bash* ）を使用している場合は、発行するコマンドの Pod 名の後にシェルコマンドを指定できます。
 ====
 
-Run the following command to list the files in the root directory:
+ルート ディレクトリ内のファイルを一覧表示するには、次のコマンドを実行します。
 
 [source,role="copypaste"]
 ----
@@ -66,7 +57,7 @@ ls /
 anaconda-post.log  bin  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  parksmap.jar  proc  root  run  sbin  srv  sys  tmp  usr  var
 ----
 
-Remember the default Service Account mentioned previously? You can view the token associated with that Service Account that was injected into the container using the following command:
+先ほど説明したデフォルトのService Accountを覚えていますか? コンテナに挿入されたそのService Accountに関連付けられたトークンは、次のコマンドを使用して表示できます。
 
 [source,role="copypaste"]
 ----
@@ -74,23 +65,23 @@ cat /var/run/secrets/kubernetes.io/serviceaccount/token
 ----
 
 [#remote_shell_session_to_container_using_webconsole]
-== Exercise: Remote Shell Session to a Container Using the Web Console
+== 演習: Webコンソールを使用したコンテナへのリモートシェルセッション
 
-The OpenShift Web Console also provides a convenient way to access a terminal session on the container without having to use the CLI.
+OpenShift Webコンソールは、CLI を使用せずにコンテナのターミナルセッションにアクセスできる便利な方法も提供します。
 
-To access a Pod's terminal via the Web Console, go to the Topology view, click the `parksmap` entry, and then click on the *Pod*. 
+Webコンソールから Pod のターミナルにアクセスするには、Topology view に移動し、`parksmap` エントリをクリックしてから、*Pod* をクリックします。 
 
 [.bordershadow]
 image::parksmap-rsh-dev-console-pod.png[link="self",window=_blank]
 
-Once you are viewing the information for the selected Pod, click on the *Terminal* tab to open a shell session.
+選択したPodの情報を表示したら、*Terminal* (ターミナル) タブをクリックしてシェル セッションを開きます。
 
 [.bordershadow]
 image::parksmap-rsh-applications-pods-terminal.png[link="self",window=_blank]
 
-Go ahead and execute the same commands you did when using the CLI to see how the Web Console-based terminal behaves.
+CLI を使用したときと同じコマンドを実行して、Webコンソールベースのターミナルの動作を確認してください。
 
-Before proceeding, close the connection to the Pod:
+続行する前に、Pod への接続を閉じます。
 
 [source,role="copypaste"]
 ----
@@ -98,21 +89,18 @@ exit
 ----
 
 [#execute_command_in_container]
-== Exercise: Execute a Command in a Container
+== 演習: コンテナ内でコマンドを実行する
 
-In addition to remote shell, it is also possible to run a command remotely in an
-already running container using the `oc exec` command. This does not require
-a shell to be installed, but only that the desired command is present and in
-the executable path.
+リモートシェルに加えて、`oc exec` コマンドを使用して、すでに実行中のコンテナ内でコマンドをリモートで実行することも可能です。この場合、シェルのインストールは不要で、必要なコマンドが実行パスに存在することが必要です。
 
-To show just the `parksmap` application's JAR file, run the following:
+`parksmap` アプリケーションの JAR ファイルのみを表示するには、次のコマンドを実行します。
 
 [source,role="copypaste"]
 ----
 oc exec parksmap-65c4f8b676-fxcrq -- ls -l /parksmap.jar
 ----
 
-You should see something like the following:
+次のような画面が表示されます。
 
 [.console-output]
 [source]
@@ -122,19 +110,18 @@ You should see something like the following:
 
 [NOTE]
 ====
-The `--` syntax in the `oc exec` command delineates where exec's options
-end and where the actual command to execute begins. Take a look at `oc exec
---help` for more details.
+`oc exec` コマンドの `--` 構文は、exec のオプションの終了位置と、実際に実行するコマンドの開始位置を示します。詳細については、`oc exec`
+`--help` を参照してください。
 ====
 
-You can also specify the shell commands to run directly with the `oc rsh` command:
+`oc rsh` コマンドを使用して、直接実行するシェル コマンドを指定することもできます。
 
 [source,role="copypaste"]
 ----
 oc rsh parksmap-65c4f8b676-fxcrq whoami
 ----
 
-You will see something like:
+次のような画面が表示されます。
 
 [.console-output]
 [source]
@@ -144,12 +131,10 @@ You will see something like:
 
 [NOTE]
 ====
-It is important to understand that, for security reasons, OpenShift does not run containers as the user specified in the Dockerfile by default. In fact,
-when OpenShift launches a container, its user is actually randomized.
+セキュリティ上の理由から、OpenShift はデフォルトでは Dockerfile で指定されたユーザーでコンテナを実行しないことを理解することが重要です。実際、OpenShift がコンテナを起動する際、そのユーザーはランダムに決定されます。
 
-If you need to allow OpenShift users to deploy container images that
-expect to run as root (or any specific user), a small configuration change is
-needed. You can learn more about the
-link:{ocp4_starter_openshift_docs}/html/images/creating-images[container image guidelines,window='_blank'] 
-for OpenShift.
+OpenShift ユーザーが root（または任意のユーザー）として実行されることを想定したコンテナイメージをデプロイできるようにする必要がある場合は、小さな設定変更が必要です。
+詳細については、OpenShift の
+link:{ocp4_starter_openshift_docs}/html/images/creating-images[コンテナイメージガイドライン,window='_blank'] 
+をご覧ください。
 ====
