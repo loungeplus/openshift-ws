@@ -1,56 +1,46 @@
-= Logging
-:navtitle: Logging
+= ロギング
+:navtitle: ロギング
 
 include::vars.adoc[]
 
-OpenShift provides some convenient mechanisms for viewing application logs.
-First and foremost is the ability to examine a *Pod*'s logs directly from the
-web console or via the command line.
+OpenShift は、アプリケーションログを表示するための便利なメカニズムをいくつか提供しています。
+まず第一に、Webコンソールまたはコマンドラインから *Pod* のログを直接確認できる機能です。
 
 [#container_logs]
-== Background: Container Logs
+== 背景: コンテナログ
 
-OpenShift expects containers to log all information to `STDOUT`. In this way, both regular and error information is
-captured via standardized mechanisms. When exploring the *Pod*'s logs
-directly, you are essentially going through the container runtime to access the
-container's logs, through OpenShift's API.
+OpenShift は、コンテナがすべての情報を `STDOUT` にログ出力することを想定しています。これにより、通常の情報とエラー情報の両方が標準化されたメカニズムによって取得されます。*Pod* のログを直接確認する場合、基本的にはコンテナランタイムを経由して、OpenShift の API を介してコンテナのログにアクセスすることになります。
 
 [NOTE]
 ====
-In some cases, applications may not have been designed to send all of their
-information to `STDOUT` and `STDERR`. In many cases, multiple local log files
-are used. While OpenShift cannot parse any information from these files, nothing
-prevents them from being created. In other cases, log information is
-sent to some external system. OpenShift does not prohibit these
-behaviors. If you have an application that does not log to `STDOUT`, either because it
-already sends log information to some external system or because it writes
-log information to various files, don't worry - OpenShift can still work with it.
+アプリケーションによっては、すべての情報を `STDOUT` と `STDERR` に送信するように設計されていない場合があります。多くの場合、複数のローカルログファイルが使用されます。 OpenShift はこれらのファイルから情報を解析することはできませんが、作成を阻止することはできません。場合によっては、ログ情報は外部システムに送信されます。OpenShift はこれらの動作を禁止していません。既にログ情報を外部システムに送信しているため、またはログ情報をさまざまなファイルに書き込んでいるために、`STDOUT` にログを記録しないアプリケーションがある場合でも、心配する必要はありません。OpenShift は引き続き動作します。
 ====
 
 [#examining_logs]
-== Exercise: Examining Logs
+== 演習: ログの確認
 
-Since you already deployed your application, you can examine its
-logs. In the *Topology* view, click the `parksmap` entry and then the *Resources* tab. You should see a *View Logs* link next to the *Pod* entry.
+アプリケーションはすでにデプロイされているので、ログを確認できます。
+*Topology* viewで `parksmap` エントリをクリックし、*Resources* (リソース)タブをクリックします。*Pod* エントリの横に *View Logs* (ログの表示)リンクが表示されます。
 
 [.bordershadow]
 image::parksmap-view-logs-link.png[link="self",window=_blank]
 
-Click the *View Logs* link to view the *Pod*'s logs:
+*Pod* のログを表示するには、*View Logs* (ログの表示)リンクをクリックします。
+
 
 [.bordershadow]
 image::parksmap-logging-console-logs.png[link="self",window=_blank]
 
-WARNING: If you notice some errors in the log, that's okay. You'll remedy those shortly.
+WARNING: ログにエラーが見つかったとしても大丈夫です。すぐに修正できます。
 
-You also have the option of viewing logs from the command line. Use the `oc logs` command, and pass a label selector to view logs from all Pods that match the selector:
+コマンドラインからログを表示することもできます。`oc logs` コマンドを使用し、ラベルセレクターを渡すと、セレクターに一致するすべてのPodのログが表示されます。
 
 [source,role="copypaste"]
 ----
 oc logs -l app=parksmap
 ----
 
-You will see the application logs displayed:
+アプリケーション ログが表示されます。
 
 [.console-output]
 [source]
@@ -71,4 +61,4 @@ pleted in 16 ms
 2019-05-22 19:44:13.395  INFO 1 --- [nio-8080-exec-2] c.o.e.roadshow.rest.BackendsController   : Backends: getAll
 ----
 
-WARNING: If you scroll through the logs, you may notice an error that mentions a service account. What's that? Don't worry, you'll learn about that shortly.
+WARNING: ログをスクロールしていくと、service accountに関するエラーに気付くかもしれません。これは何でしょうか？ご安心ください。すぐに説明いたします。
