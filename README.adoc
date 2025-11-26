@@ -1,5 +1,5 @@
 == このリポジトリについて
-OpenShift Virtualization Roadshowコンテンツの日本語訳リポジトリです。
+OpenShift Getting Started Workshop コンテンツの日本語訳リポジトリです。
 
 英語版オリジナルのリポジトリは下記です。
 
