@@ -1,17 +1,17 @@
-= Introduction to OpenShift
+= OpenShift の概要
 
 include::vars.adoc[]
 
-image::openshift-logo.png[OpenShift Logo, 400]
+image::openshift-logo.png[OpenShift ロゴ ,400]
 
-== What is OpenShift?
+== OpenShift とは？
 
-link:https://www.redhat.com/en/technologies/cloud-computing/openshift[OpenShift,window='_blank'] is a container-based application platform that enables development teams to deploy, manage, and scale their applications across any infrastructure—whether on-premises, public cloud, or hybrid environments.
+link:https://www.redhat.com/en/technologies/cloud-computing/openshift[OpenShift,window='_blank'] は、コンテナベースのアプリケーションプラットフォームです。これにより、開発チームは、オンプレミス、パブリッククラウド、ハイブリッド環境など、あらゆるインフラストラクチャにわたってアプリケーションのデプロイ、管理、スケーリングを行うことができます。
 
-== What is a Container?
+== コンテナとは？
 
-link:https://www.redhat.com/en/topics/containers/whats-a-linux-container-vb[Containers,window='_blank'] are a standardized way to package applications along with all their dependencies. This approach simplifies deployment and accelerates delivery. Unlike virtual machines, containers do not include an entire operating system. Only the application, runtime, libraries, and configuration are packaged inside the container. This makes containers a more lightweight, portable, and efficient deployment model compared to virtual machines.
+link:https://www.redhat.com/en/topics/containers/whats-a-linux-container-vb[コンテナ,window='_blank'] は、アプリケーションとそのすべての依存関係をパッケージ化する標準化された方法です。このアプローチにより、デプロイが簡素化され、デリバリーが迅速化されます。仮想マシンとは異なり、コンテナにはオペレーティングシステム全体は含まれません。コンテナ内には、アプリケーション、ランタイム、ライブラリ、そして構成のみがパッケージ化されています。そのため、コンテナは仮想マシンと比較して、より軽量で移植性が高く、効率的なデプロイメントモデルとなっています。
 
-Building on this container foundation, link:https://openshift.com/[OpenShift,window='_blank'] enables efficient application development by providing a complete platform that streamlines workflows and includes validated integrations - making it ideal for development teams looking to accelerate their projects and organizations looking for a standardized application platform.
+このコンテナ基盤を基盤として、link:https://openshift.com/[OpenShift,window='_blank'] は、ワークフローを合理化し、検証済みの統合機能を備えた包括的なプラットフォームを提供することで、効率的なアプリケーション開発を実現します。これは、プロジェクトの加速を目指す開発チームや、標準化されたアプリケーションプラットフォームを求める組織にとって理想的なソリューションです。
 
-This workshop is accompanied by a slide deck available at link:https://dn.dev/openshift-workshop[dn.dev/openshift-workshop,window='_blank']
+このワークショップには link:https://dn.dev/openshift-workshop[dn.dev/openshift-workshop,window='_blank'] で公開されているスライド資料が付属しています。
