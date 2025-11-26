@@ -1,15 +1,14 @@
-= OpenShift Architecture
-:navtitle: OpenShift Architecture
+= OpenShift アーキテクチャ
+:navtitle: OpenShift アーキテクチャ
 
 include::vars.adoc[]
 
-image::common-environment-ocp-architecture.png[OpenShift Architecture]
+image::common-environment-ocp-architecture.png[OpenShift アーキテクチャ]
 
-The workshop is hosted in an OpenShift environment that is running on a
-public cloud. The environment consists of the following systems:
+このワークショップは、パブリッククラウド上で稼働する OpenShift 環境で動作しています。この環境は、以下のシステムで構成されています。
 
-* Control plane node(s)
-* Worker or "application" nodes
-* Dynamic Provisioned Storage
-* Private Container Registry
-* Routing Layer
+* コントロールプレーンノード
+* ワーカーノード（または「アプリケーション」ノード）
+* 動的プロビジョニングストレージ
+* プライベートコンテナレジストリ
+* ルーティングレイヤー
