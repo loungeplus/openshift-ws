@@ -1,107 +1,100 @@
-= Permissions
+= パーミッション（権限）
 :navtitle: Permissions
 
 include::vars.adoc[]
 
-Almost every interaction with an OpenShift environment that you can think of
-requires going through the OpenShift's control plane API. All API interactions are both authenticated (AuthN - who are you?) and authorized (AuthZ - are you allowed to do what you are asking?).
+OpenShift 環境とのほぼすべてのやり取りは、OpenShift のコントロールプレーン API を経由する必要があります。すべての API やり取りは、認証 (AuthN - ユーザーは誰ですか?) と認可 (AuthZ - 要求している操作を実行できますか?) の両方が行われます。
 
-In the logging section, you saw an
-error related to a *Service Account*.
+ログ出力セクションでは、*Service Account* に関連するエラーを確認しました。
 
-As OpenShift is a declarative platform, some actions will be performed by the platform and not by the end user issuing a command. These actions are performed using a *Service Account* which is a special type of `user` that the platform will use internally.
+OpenShift は宣言型プラットフォームであるため、一部のアクションはエンドユーザーがコマンドを発行するのではなく、プラットフォームによって実行されます。これらのアクションは、プラットフォームが内部的に使用する特別なタイプの `ユーザー` である *Service Account* を使用して実行されます。
 
-OpenShift automatically creates a few special service accounts in every project.
-The **default** service account is responsible for running the Pods, and OpenShift automatically injects this service account into
-every Pod that is launched. By changing the permissions for that service
-account, you can enable additional functionality.
+OpenShift は、すべてのプロジェクトにいくつかの特別なService Accountを自動的に作成します。
+**default** Service Accountは Pod の実行を担当し、OpenShift は起動されるすべての Pod にこのService Accountを自動的に挿入します。このService Accountの権限を変更することで、追加機能を有効にできます。
 
-To view current permissions in the web console, go to the {ocp4_starter_console_url}/topology/ns/{ocp4_starter_project}[Topology view, link="self",window=_blank], click the `parksmap` entry, go to the *Details* tab, and then click the *Namespace*. 
+Webコンソールで現在の権限を表示するには、link:{ocp4_starter_console_url}/topology/ns/{ocp4_starter_project}[Topology view, link="self",window=_blank] に移動し、`parksmap` エントリをクリックして、*Details* (詳細) タブに移動し、*Namespace* をクリックします。 
 
 [.bordershadow]
 image::parksmap-permissions-namespace.png[link="self",window=_blank]
 
-Select the *Role Bindings* tab and filter by *Namespace Role Binding* to see all permissions for the selected project.
+*RoleBindings* タブを選択し、Filterをクリックし *Namespace Role Binding* (namespaceのRoleBinding)でフィルターして、選択したプロジェクトのすべての権限を表示します。
 
 [.bordershadow]
 image::parksmap-permissions-membership.png[link="self",window=_blank]
 
 [#grant_serviceaccount_view_permissions]
-== Exercise: Grant Service Account View Permissions
-The parksmap application wants to talk to the OpenShift API to learn about other
-*Pods*, *Services*, and resources within your *Project*. You'll soon learn why!
+== 演習: Service Accountに表示(view)権限を付与する
+parksmap アプリケーションは、OpenShift API と通信して、プロジェクト内の他の *Pod*、*Services*、およびリソースに関する情報を取得しようとします。その理由はすぐに説明します。
 
-The parksmap application runs as a *Service Account* in your project on the cluster: namely the `default` *Service Account*. You can grant the necessary `view` access to this *Service Account* to allow it to query the API and see what resources are within the *Project*. This addresses the cause of the error message you saw previously in the logs.
+parksmap アプリケーションは、クラスター上のプロジェクト内で *Service Account* として実行されます。つまり、`default` *Service Account* です。この *Service Account* に必要な `view` 権限を付与することで、API をクエリしてプロジェクト内のリソースを確認できるようになります。これにより、ログに表示されたエラーメッセージの原因が解消されます。
 
-Choose one of the options below - either *OpenShift Console* or *`oc` command line* — to update the `default` *Service Account* in the `{ocp4_starter_project}` project:
+`{ocp4_starter_project}` プロジェクトの `default` *Service Account* を更新するには、以下のいずれかのオプション  *OpenShift コンソール* または *`oc` コマンドライン* を選択します。
 
 ====
-*OPTION A: OpenShift Console:*
+*OPTION A: OpenShift Webコンソール:*
 
-. Go to *Home* -> *Projects* -> *{ocp4_starter_project}*, then *Role Bindings* and then click the *Create Binding* button.
+. *Home* (ホーム) -> *Projects* (プロジェクト) -> *{ocp4_starter_project}* に移動し、*RoleBindings* を選択して、*Create Binding* (バインディングの作成) ボタンをクリックします。
 +
 image::parksmap-permissions-membership-serviceaccount-list.png[link="self",window=_blank]
 +
-. Configure the following fields:
-  * Role Binding Name: *view*
+. 次のフィールドを設定します:
+  * Role Binding Name (名前): *view*
   * Namespace: *{ocp4_starter_project}*
-  * Role Name: *view*, Subject: *Service Account*
-  * Subject Namespace: *{ocp4_starter_project}*
-  * Subject Name: *default*.
+  * Role Name (Role名): *view*
+  * Subject (サブジェクト): *Service Account*
+  * Subject Namespace (namespaceの選択): *{ocp4_starter_project}*
+  * Subject Name (サブジェクトの名前): *default*
 +
 image::parksmap-permissions-membership-serviceaccount-edit.png[link="self",window=_blank]
 +
-. Once you're finished editing permissions, click on the *Create* button. You should then be able to see the new `view` item in the *RoleBindings* list for the `{ocp4_starter_project}` project.
+. 権限の編集が完了したら、*Create* (作成) ボタンをクリックします。すると、`{ocp4_starter_project}` プロジェクトの *RoleBindings* リストに新しい `view` 項目が表示されるはずです。
 +
 image::parksmap-permissions-membership-serviceaccount-done.png[link="self",window=_blank]
 
-*OPTION B: `oc` command line:*
+*OPTION B: `oc` コマンドライン:*
 
-First, confirm you're in the right project context:
+まず、適切なプロジェクト コンテキストにいることを確認します。
 
 [source,role="copypaste",subs="attributes"]
 ----
 oc project {ocp4_starter_project}
 ----
 
-Then use the `oc policy add-role-to-user` command to grant the predefined `view` role to the service account:
+次に、`oc policy add-role-to-user` コマンドを使用して、定義済みの `view` ロールをservice accountに付与します。
 
 [source,role="copypaste"]
 ----
 oc policy add-role-to-user view -z default
 ----
 
-.What does the `-z` flag do?
+.`-z` フラグは何をしますか?
 ****
-From the `-h` output on `oc policy`:
+`oc policy` の `-h` 出力から:
 
 [source]
 ----
 -z, --serviceaccount=[]: service account in the current namespace to use as a user
 ----
 
-The `-z` syntax is a special one that saves us from having to type out the
-entire string, which, in this case, is
-`system:serviceaccount:{ocp4_starter_project}:default`. It's a nifty shortcut.
+`-z` 構文は特別なもので、文字列全体（この場合は `system:serviceaccount:{ocp4_starter_project}:default`）を入力する手間を省きます。これは便利なショートカットです。
 ****
 
-NOTE: The `-z` flag will only work for service accounts in the *current* project. If you're referring to a service account in a different project, use the `-n <project>` switch.
-
+NOTE: `-z` フラグは、 *現在の* プロジェクト内のservice accountに対してのみ機能します。別のプロジェクトのservice accountを参照する場合は、`-n <project>` スイッチを使用してください。
 ====
 
 [#redeploy_application]
-== Exercise: Redeploy Application
+== 演習: アプリケーションの再デプロイ
 
-Use the `oc rollout` command to restart the `parksmap` application. This will create a new Pod.
+`oc rollout` コマンドを使用して `parksmap` アプリケーションを再起動します。これにより、新しい Pod が作成されます。
 
 [source,role="copypaste"]
 ----
 oc rollout restart deployment/parksmap
 ----
 
-A new deployment is immediately started. Return to Topology view and click the `parksmap` entry again to watch it happen. The deployment happens quickly, but you can see the change reflected in the *ReplicaSet* number. You can also use the `oc get pods` command to see that the new Pod has an age that's just a few seconds old.
+新しいデプロイメントがすぐに開始されます。Topology viewに戻り、もう一度 `parksmap` エントリをクリックして、デプロイメントの実行状況を確認してください。デプロイメントはすぐに完了しますが、*ReplicaSet* の数値に変化が反映されているのが確認できます。また、`oc get pods` コマンドを使用して、新しいポッドの年齢がわずか数秒であることも確認できます。
 
 [.bordershadow]
 image::parksmap-permissions-redeployed.png[link="self",window=_blank]
 
-If you check the application logs you should see no errors.
+アプリケーション ログを確認すると、エラーは表示されません。
