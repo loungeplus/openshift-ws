@@ -1,37 +1,34 @@
-= Connecting to a Database
-:navtitle: Connecting to a Database
+= データベースへの接続
+:navtitle: データベースへの接続
 
 include::vars.adoc[]
 
-In this section, you will deploy and connect a MongoDB database that the
-`nationalparks` application will use to store location information.
+このセクションでは、`nationalparks` アプリケーションが位置情報を保存するために使用する MongoDB データベースをデプロイして接続します。
 
-Finally, you will mark the `nationalparks` application as a backend for the map
-visualization tool, so that it can be dynamically discovered by the `parksmap`
-component using the OpenShift discovery mechanism and map data will be displayed
-automatically.
+最後に、`nationalparks` アプリケーションをマップ可視化ツールのバックエンドとして設定します。これにより、OpenShift のディスカバリ（discovery）メカニズムを使用して `parksmap` コンポーネントがアプリケーションを動的に検出し、マップデータが自動的に表示されるようになります。
 
 [.bordershadow]
 image::roadshow-app-architecture-nationalparks-2.png[link="self",window=_blank]
 
 [#storage]
-== Background: Storage
+== 背景: ストレージ
 
-Most useful applications are "stateful" or "dynamic" in some way, and this is
-usually achieved with a database or other form of data storage. In this workshop section, you are
-going to add MongoDB to your application architecture, and then configure the `nationalparks` Deployment to
-connect to the database. The connection parameters are provided to the Deployment using environment variables using a https://kubernetes.io/docs/concepts/configuration/secret/[Secret, window="_blank"].
+最も有用なアプリケーションは、何らかの形で「ステートフル」または「ダイナミック」であり、これは通常、データベースやその他の形式のデータストレージによって実現されます。このワークショップセクションでは、
+アプリケーションアーキテクチャにMongoDBを追加し、`nationalparks` デプロイメントを設定してデータベースに接続します。
+接続パラメータは、link:https://kubernetes.io/docs/concepts/configuration/secret/[Secret (シークレット), window="_blank"]を使用した環境変数を使用してデプロイメントに提供されます。
+
 
 [#create_mongodb_instance]
-== Exercise: Deploy MongoDB
+== 演習: MongoDB のデプロイ
 
-The first step is to create a *Secret* which is used to store senstive information such as database connection credentials.
-In *Workloads* → *Secrets*, click the *Create* button in the upper right and select *From YAML*.
+最初のステップは、データベース接続の認証情報などの機密情報を保存するために使用する *Secret* (シークレット)を作成することです。
+*Workloads* → *Secrets* (シークレット) で、右上の *Create* (作成) ボタンをクリックし、*From YAML* (ソース:YAML) を選択します。
+
 
 [.bordershadow]
 image::mongodb_create_secret.png[link="self",window=_blank]
 
-In the editor, paste the following YAML:
+エディターで次の YAML を貼り付けます。
 
 [source,role="copypaste",subs="attributes"]
 ----
@@ -51,130 +48,128 @@ stringData:
 [.bordershadow]
 image::mongodb_create_secret_dialog.png[link="self",window=_blank]
 
-Click the *Create* button at the bottom of the form.
+フォーム下部の *Create* (作成) ボタンをクリックします。
 
-With the Secret in place, click the *+* icon in the upper right, as done previously for adding the other applications. Choose the *Container images* option. Fill in the following details:
+Secretを入力したら、他のアプリケーションを追加した時と同じように、右上の *+* アイコンをクリックします。*Container images* (コンテナイメージ) オプションを選択します。以下の情報を入力します。
 
-* Image section:
-    - Image name from external registry → `mongo:6.0.4`
-    - Runtime icon → choose `mongodb`
 
-* General section:
-    - Application → `workshop`
-    - Name → `mongodb`
+* Image section (イメージ):
+    - Image name from external registry (外部レジストリーからのイメージ名) → `mongo:6.0.4`
+    - Runtime icon (ランタイムアイコン) → `mongodb` を選択
+
+* General section (一般):
+    - Application (アプリケーション) → `workshop`
+    - Name (名前) → `mongodb`
 
 [.bordershadow]
 image::mongodb_deploy_image_image.png[link="self",window=_blank]
 
-* Make sure that the drop-down for resource type is set to the *Deployment* option.
+* リソース タイプのドロップダウンが *Deployment* オプションに設定されていることを確認します。
 
-* Click *Show advanced Deployment options*.
-    - Here, you'll add the following two environment variables which will be sourced from the previously created secret named `mongodb-credentials`.
-    - Click *+Add from ConfigMap or Secret* and enter `MONGO_INITDB_ROOT_USERNAME` as the name. For the value, choose `mongodb-credentials` as resource and `admin-usr` as key.
-    - Again, click *+Add from ConfigMap or Secret* and enter `MONGO_INITDB_ROOT_PASSWORD` as the name. For the value, choose `mongodb-credentials` as resource and `admin-pwd` as key.
+* *Show advanced Deployment options* (詳細なデプロイメントオプションの表示) をクリックします。
+    - ここで、以前に作成した `mongodb-credentials` という名前のシークレットから取得される次の 2 つの環境変数を追加します。
+    - *+Add from ConfigMap or Secret* (ConfigMapまたはシークレットからの追加) をクリックし、名前として `MONGO_INITDB_ROOT_USERNAME` と入力します。値には、リソースとして `mongodb-credentials` 、キーとして `admin-usr` を選択します。
+    - 再度、*+Add from ConfigMap or Secret* (ConfigMapまたはシークレットからの追加) をクリックし、名前として `MONGO_INITDB_ROOT_PASSWORD` と入力します。値には、リソースとして `mongodb-credentials` 、キーとして `admin-pwd` を選択します。
 
-* Advanced options:
-    - Create a route → *uncheck* because the database will not be accessed by clients outside the OpenShift cluster.
+* Advanced options (詳細オプション):
+    - Create a route (routeの作成) → OpenShift クラスター外部のクライアントはデータベースにアクセスしないため、*チェックを外します*。
 
 [.bordershadow]
 image::mongodb_deploy_image_general.png[link="self",window=_blank]
 
-Finally, click the *Create* button at the bottom of the page to deploy a MongoDB container.
+最後に、ページ下部の *Create* (作成) ボタンをクリックして、MongoDBコンテナをデプロイします。
 
-The next step is to create a specific user in this MongoDB instance which the nationalparks application will use to create a connection. For this, click the *MongoDB Deployment* in the Topology view, then click on the corresponding *Pod* shown in the right view pane.
+次のステップでは、このMongoDBインスタンスに、nationalparksアプリケーションが接続を確立するために使用する特定のユーザーを作成します。そのためには、Topology(トポロジー) viewで *MongoDB デプロイメント* をクリックし、*Resources* (リソース) タブに表示される *Pod* をクリックします。
 
 [.bordershadow]
 image::mongodb_deployment_topology_pod.png[link="self",window=_blank]
 
-You will end up in the Pod details view where you can click *Terminal* to start a terminal session in the underlying container.
+
+最終的にPodの詳細ビューが表示され、*Terminal* (ターミナル) をクリックして、基礎となるコンテナでターミナル セッションを開始できます。
 
 [.bordershadow]
 image::mongodb_pod_details_terminal.png[link="self",window=_blank]
 
-Copy and paste the following snippet into the terminal window to create a database user with the proper settings and roles:
+適切な設定とロールを持つデータベース ユーザーを作成するには、次のスニペットをコピーしてターミナル ウィンドウに貼り付けます。
 
 [source,role=copypaste]
 ----
 mongosh -u admin -p secret --authenticationDatabase admin --eval 'use parksapp' --eval 'db.createUser({user: "parksapp", pwd: "keepsafe", roles: [{ role: "dbAdmin", db: "parksapp" },{ role: "readWrite", db: "parksapp" }]})' --quiet
 ----
 
-NOTE: In production environments you could modify the container entrypoint or use an https://kubernetes.io/docs/concepts/workloads/pods/init-containers/[init container, window="_blank"] to manage database configuration.
+NOTE: 商用環境では、コンテナのエントリポイントを変更したり、link:https://kubernetes.io/docs/concepts/workloads/pods/init-containers/[init container, window="_blank"] を使用してデータベース構成を管理したりできます。
 
-If the command is successful, you'll see the output below:
+コマンドが成功すると、以下の出力が表示されます。
 
 [.console-output]
 [source]
 ----
 { ok: 1 }
 ----
-
-With that, everything regarding the database is prepared and you can switch your focus back to the nationalparks application. Go back to the *Topology* view, click the *nationalparks Deployment* and choose _Actions → Edit Deployment_ from the drop-down in the right view pane.
+これでデータベースに関する準備はすべて完了です。nationalparksアプリケーションに焦点を戻してください。*Topology* (トポロジー) viewに戻り、*nationalparks デプロイメント* をクリックして、右側のビューペインのドロップダウンから _Actions (アクション) → Edit Deployment (Deploymentの編集)_ を選択してください。
 
 [.bordershadow]
 image::nationalparks_deployment_edit.png[link="self",window=_blank]
 
-In the *Edit Deployment* dialog, scroll down to the *Environment Variables* section and add the following four entries. First, set the server host and the database:
+*Edit Deployment* (Deploymentの編集) ダイアログで、*Environment Variables* (環境変数) セクションまでスクロールダウンし、以下の4つのエントリを追加します。まず、サーバーホストとデータベースを設定します。
 
     - `MONGODB_SERVER_HOST`: `mongodb`
     - `MONGODB_DATABASE`: `parksapp`
 
-The `MONGODB_SERVER_HOST` value of `mongodb` will be resolved to the MongoDB *Service* that was created when you deployed the MongoDB container image.
+`MONGODB_SERVER_HOST` の値 `mongodb` は、MongoDB コンテナイメージをデプロイしたときに作成された MongoDB *Service* に解決されます。
 
-The other two are credentials are sourced from the `mongodb-credentials` Secret.
+- 他の 2 つの認証情報は、`mongodb-credentials` Secretから取得されます。
 
-Click *+Add from ConfigMap or Secret* and enter `MONGODB_USER` as the name. For the value, choose `mongodb-credentials` as resource and `app-usr` as key.
+- *+Add from ConfigMap or Secret* (ConfigMapまたはシークレットからの追加) をクリックし、名前に `MONGODB_USER` と入力します。値には、リソースとして `mongodb-credentials`、キーとして `app-usr` を選択します。
 
-Again, click *+Add from ConfigMap or Secret* and enter `MONGODB_PASSWORD` as the name. For the value, choose `mongodb-credentials` as resource and `app-pwd` as key.
+- 再度、*+Add from ConfigMap or Secret* (ConfigMapまたはシークレットからの追加) をクリックし、名前に `MONGODB_PASSWORD` と入力します。値には、リソースとして `mongodb-credentials`、キーとして `app-pwd` を選択します。
 
 [.bordershadow]
 image::nationalparks_deployment_env_vars_secrets.png[link="self",window=_blank]
 
-Finally, click the *Save* button at the bottom of the dialog. This will trigger a rollout of a new version of the application, which will connect the MongoDB instance you just deployed.
+最後に、ダイアログ下部の *Save* (保存) ボタンをクリックします。これにより、アプリケーションの新しいバージョンのロールアウトが開始され、先ほどデプロイしたMongoDBインスタンスに接続されます。
 
 
 [NOTE]
 ====
-You are probably wondering how the database connection magically started
-working? When deploying applications to OpenShift, it is always best to create
-environment variables using Secrets or ConfigMaps to define connection parameters to dependent systems. This allows
-for application portability across different environments without without modifying source code. The source file that
-performs the connection as well as creates the database schema can be viewed
-here:
+データベース接続が魔法のように機能し始めたのはなぜだろうと、不思議に思われるかもしれません。
+OpenShift にアプリケーションをデプロイする際は、Secret または ConfigMap を使用して環境変数を作成し、依存システムへの接続パラメータを定義するのが最適です。これにより、ソースコードを変更することなく、異なる環境間でのアプリケーションの移植が可能になります。接続を実行し、データベーススキーマを作成するソースファイルは、
+こちらでご覧いただけます。
 
 [source,role="copypaste",subs="attributes"]
 ----
 {ocp4_starter_openshift_roadshow}/nationalparks/blob/master/src/main/java/com/openshift/evg/roadshow/parks/db/MongoDBConnection.java#L44-l48
 ----
 
-Notice that the applicaton catches the exception if the database connection is not defined? This is why you were able to deploy it without it crashing.
+データベース接続が定義されていない場合、アプリケーションが例外をキャッチすることに注意してください。これが、クラッシュせずにデプロイできた理由です。
 
 ====
 
 [#adding_labels]
-== Exercise: Adding Labels
+== 演習: ラベルの追加
 
-Next, let's fix the labels assigned to the MongoDB deployment. From the *Topology* view, select the MongoDB deployment and choose _Actions → Edit Labels_.
+次に、MongoDB デプロイメントに割り当てられたラベルを修正しましょう。*Topology* (トポロジー) viewで MongoDB デプロイメントを選択し、_Actions (アクション) → Edit Labels (ラベルの編集)_ を選択します。
 
 [.bordershadow]
 image::mongodb_deployment_labels.png[link="self",window=_blank]
 
-Like before, you'll add 3 labels:
+前回と同様に、3つのラベルを追加します。
 
-The name of the Application group:
+アプリケーショングループの名前:
 
 [source,role=copypaste]
 ----
 app=workshop
 ----
 
-Next, the name of this deployment:
+次にこのデプロイメントの名前:
 
 [source,role=copypaste]
 ----
 component=nationalparks
 ----
 
-And finally, the role this component plays in the overall application:
+そして最後に、このコンポーネントがアプリケーション全体で果たす役割:
 
 [source,role=copypaste]
 ----
@@ -182,11 +177,12 @@ role=database
 ----
 
 [#exploring_openshift_magic]
-== Exercise: Exploring OpenShift Magic
+== 演習: OpenShift の魔法を探る
 
-After updating the `nationalparks` Deployment with the database connection environment variables, some
-magic happened. OpenShift rolled out a new version of the application that uses the new variables by upating the *ReplicaSet*. You
-can verify this by looking at the output of `oc get rs -l app=nationalparks`:
+データベース接続環境変数を使用して `nationalparks` デプロイメントを更新すると、
+魔法のようなことが起こりました。OpenShift は *ReplicaSet* を更新することで、新しい変数を使用するアプリケーションの新しいバージョンをロールアウトしました。
+`oc get rs -l app=nationalparks` の出力を確認することで、これを確認できます。
+
 
 [.console-output]
 [source]
@@ -197,22 +193,21 @@ nationalparks-7445576cd9   0         0         0       6m42s
 nationalparks-789c6bc4f4   1         1         1       41s
 ----
 
-You can see the DESIRED and CURRENT number of instances for current a prior ReplicaSets. The desired and current number of the previous instances are 0.
-This means that OpenShift has gracefully replaced your previous application Pod with a new Pod that uses the new configuration.
-
+以前のReplicaSetのインスタンス数（DESIRED）と現在のインスタンス数を確認できます。以前のインスタンスのDESIREDと現在のインスタンス数は0です。
+これは、OpenShiftが以前のアプリケーションPodを新しい構成を使用する新しいPodに正常に置き換えたことを意味します。
 
 [#data_data_everywhere]
-== Exercise: Data, Data, Everywhere
+== 演習: どこにでもデータあり
 
-Now that you have a database deployed, you can again visit the `nationalparks` web
-service to query for data:
+データベースがデプロイされたので、再び `nationalparks` ウェブサービスにアクセスして、
+データをクエリできます。
 
 [source,role="copypaste",subs="attributes"]
 ----
 https://nationalparks-{ocp4_starter_project}.{ocp4_starter_apps_domain}/ws/data/all
 ----
 
-And the result?
+そして結果は？
 
 [.console-output]
 [source]
@@ -220,18 +215,16 @@ And the result?
 []
 ----
 
-Where's the data? Think about the process you went through. You deployed the
-application and then deployed the database. Nothing actually loaded data
-*into* the database, though.
+データはどこにあるのでしょうか？これまでのプロセスを思い出してみてください。アプリケーションをデプロイし、次にデータベースをデプロイしました。しかし、実際には何もデータがデータベースにロードされていません。
 
-The application provides an endpoint to do just that. Open this URL in your web browser to have make `nationalparks` application insert a sample dataset into MongoDB:
+アプリケーションは、まさにそのためのエンドポイントを提供しています。Webブラウザで次のURLを開くと、`nationalparks` アプリケーションがサンプルデータセットをMongoDBに挿入します。
 
 [source,role="copypaste",subs="attributes"]
 ----
 https://nationalparks-{ocp4_starter_project}.{ocp4_starter_apps_domain}/ws/data/load
 ----
 
-And the result?
+そして結果は？
 
 [.console-output]
 [source]
@@ -239,41 +232,33 @@ And the result?
 Items inserted in database: 2893
 ----
 
-If you then go back to `/ws/data/all` you will see tons of JSON data now.
+その後、`/ws/data/all` に戻ると、大量の JSON データが表示されます。
 
-NOTE: There are some errors reported with browsers like Firefox 54 that don't properly parse the resulting JSON. It's
-a browser problem, and the application is working properly.
+NOTE: Firefox 54 などのブラウザでは、出力された JSON が正しく解析されないため、エラーが発生する場合があります。これはブラウザの問題であり、アプリケーションは正常に動作しています。
 
 [source,role="copypaste",subs="attributes"]
 ----
 https://parksmap-{ocp4_starter_project}.{ocp4_starter_apps_domain}
 ----
 
-There's just one thing. The main map *still* isn't displaying the parks.
-That's because the frontend only tries to talk to services that have
-the right *Label*.
+ただ一つ問題があります。メインマップにはまだ公園が表示されていません。
+これは、フロントエンドが適切な *Label* を持つサービスとのみ通信しようとしているためです。
 
 
 [#working_with_labels]
-== Exercise: Working With Labels
+== 演習: ラベルの操作
 
-You explored how a *Label* is just a key-value pair earlier when looking at
-*Services* and *Routes* and *Selectors*. In general, a *Label* is simply an
-arbitrary key=value pair, for example:
+*Services*、*Routes*、*Selectors* について学習した際に、*Label* が単なるキーと値のペアであることを学びました。一般的に、*Label* は単なる任意のキーと値のペアです。例えば、次のようになります。
 
 * `pizza=pepperoni`
 * `pet=dog`
 * `openshift=awesome`
 
-In the case of the parksmap, the application is actually querying the OpenShift
-API and asking about the *Routes* and *Services* in the project. If any of them have a
-*Label* that is `type=parksmap-backend`, the application knows to contact
-the endpoints to query for map data.
-You can see the code that does this
-link:{ocp4_starter_openshift_roadshow}/parksmap-web/blob/master/src/main/java/com/openshift/evg/roadshow/rest/RouteWatcher.java#L20[in theRouteWatcher.java file,window='_blank'].
+parksmap の場合、アプリケーションは実際に OpenShift API にクエリを実行し、プロジェクト内の *Routes* と *Services* について問い合わせます。いずれかの *Label* が `type=parksmap-backend` である場合、アプリケーションはエンドポイントに接続してマップデータをクエリする必要があることを認識します。
+これを実行するコードは link:{ocp4_starter_openshift_roadshow}/parksmap-web/blob/master/src/main/java/com/openshift/evg/roadshow/rest/RouteWatcher.java#L20[theRouteWatcher.java ファイル,window='_blank'] からご確認できます。
 
-Fortunately, the command line provides a convenient way for you to manipulate
-labels. `describe` the `nationalparks` service:
+幸いなことに、コマンドラインにはラベルを操作する便利な方法が用意されています。
+`nationalparks` routeを `describe` します。
 
 [source,role=copypaste]
 ----
@@ -308,14 +293,14 @@ Weight:                 100 (100%)
 Endpoints:              10.1.9.8:8080
 ----
 
-You can see that it already has some labels. Use `oc label` to add the label necessary for the RouteWatcher to discover the backend:
+すでにラベルがいくつか付いているのが分かります。`oc label` を使って、RouteWatcher がバックエンドを検出するために必要なラベルを追加します。
 
 [source,role=copypaste]
 ----
 oc label route nationalparks type=parksmap-backend
 ----
 
-You will see something like:
+次のような画面が表示されます。
 
 [.console-output]
 [source]
@@ -323,7 +308,7 @@ You will see something like:
 route.route.openshift.io/nationalparks labeled
 ----
 
-Check your browser now by visiting the parksmap URL:
+parksmap URL にアクセスしてブラウザを確認してください。
 
 [source,role="copypaste",subs="attributes"]
 ----
@@ -333,4 +318,4 @@ https://parksmap-{ocp4_starter_project}.{ocp4_starter_apps_domain}
 [.bordershadow]
 image::nationalparks-databases-new-parks.png[link="self",window=_blank]
 
-You'll notice that the parks suddenly are showing up. That's really cool!
+公園が突然現れているのに気づくでしょう。本当にすごいですね！
