@@ -1,55 +1,39 @@
-= Further Resources
-:navtitle: Further Resources
+= その他のリソース
+:navtitle: その他のリソース
 
 include::vars.adoc[]
 
-The exercices in this workshop have shown you how OpenShift can be used not only for deploying
-stateless web applications, but also applications which require persistent
-file system storage.
 
-This flexibility makes OpenShift an ideal platform for deploying both web
-applications and databases.
 
-If you have finished this workshop early and want to experiment some more,
-we have additional exercises you can try out using our online interactive
-learning environment.
+このワークショップの演習では、OpenShiftがステートレスなWebアプリケーションのデプロイだけでなく、永続的なファイルシステムストレージを必要とするアプリケーションにもどのように使用できるかを見てきました。 この柔軟性により、OpenShiftはWebアプリケーションとデータベースの両方をデプロイするための理想的なプラットフォームとなっています。
 
-* link:https://developers.redhat.com/learn[*Red Hat Developer Learning Portal*,window='_blank'] - An online interactive learning environment where you can run
-through various scenarios related to using OpenShift and more.
+このワークショップを早く終え、もう少し実験したい場合は、オンラインのインタラクティブ学習環境で試すことができる追加の演習があります。
 
-The online interactive learning environment is always available so you
-can continue to work on those exercises even after the workshop is over.
 
-Below you will find further resources for learning about OpenShift and
-running OpenShift on your own computer, as well as details about OpenShift
-Online or other OpenShift related products and services.
+* link:https://developers.redhat.com/learn[*Red Hat Developer Learning Portal*,window='_blank'] - OpenShiftの使用などに関連する様々なシナリオを実行できるオンラインのインタラクティブ学習環境です。 オンラインのインタラクティブ学習環境はいつでも利用できるため、ワークショップが終了した後でも、これらの演習に引き続き取り組むことができます。
 
-* link:https://docs.redhat.com/en/documentation/openshift_container_platform[*OpenShift Documentation*,window='_blank'] - The landing page for OpenShift documentation.
+以下に、OpenShiftについて学び、自分のコンピュータでOpenShiftを実行するためのさらなるリソース、およびOpenShift Onlineやその他のOpenShift関連製品・サービスに関する詳細を示します。
 
-* link:https://developers.redhat.com/learn/openshift[*OpenShift Resources on developers.redhat.com*,window='_blank'] - A collection of resources for developers who are building and deploying applications on OpenShift.
+* link:https://docs.redhat.com/en/documentation/openshift_container_platform[*OpenShift ドキュメント*,window='_blank'] - OpenShiftドキュメントのランディングページです。
 
-* link:https://developers.redhat.com/products/openshift-local/overview[*Red Hat OpenShift Local*,window='_blank'] - A tool which can
-be used to install a local OpenShift cluster on your own computer, running
-in a virtual machine.
+* link:https://developers.redhat.com/learn/openshift[*developers.redhat.com 上の OpenShift リソース*,window='_blank'] - A OpenShift上でアプリケーションを構築・デプロイする開発者向けのリソース集です。
 
-* link:https://www.openshift.com/dedicated[*OpenShift Dedicated*,window='_blank'] - A
-dedicated hosting environment for running your applications, managed and
-supported for you by Red Hat.
+* link:https://developers.redhat.com/products/openshift-local/overview[*Red Hat OpenShift Local*,window='_blank'] - 自分のコンピュータ上の仮想マシンでローカルのOpenShiftクラスターをインストールするために使用できるツールです。
 
-* link:https://www.openshift.com/[*OpenShift Container Platform*,window='_blank'] - The Red
-Hat supported OpenShift product for installation on premise or in hosted
-cloud environments.
+* link:https://www.openshift.com/dedicated[*OpenShift Dedicated*,window='_blank'] - アプリケーションを実行するための専用ホスティング環境で、Red Hatによって管理・サポートされます。
 
-* link:https://commons.openshift.org[*OpenShift Commons*,window=_blank] - A community for users, partners, customers, and contributors to come together to collaborate and work together on OpenShift.
+* link:https://www.openshift.com/[*OpenShift Container Platform*,window='_blank'] - オンプレミスまたはホストされたクラウド環境にインストールするための、Red HatがサポートするOpenShift製品です。
 
-The following free online eBooks are also available for download related to OpenShift.
+* link:https://commons.openshift.org[*OpenShift Commons*,window=_blank] - A ユーザー、パートナー、顧客、コントリビューターがOpenShift上で協力し、共同作業するために集まるコミュニティです。
 
-* link:https://developers.redhat.com/e-books/openshift-for-developers[*OpenShift for Developers Second Edition*,window='_blank']
+以下の無料オンラインeBookも、OpenShift関連でダウンロード可能です
+
+* link:https://developers.redhat.com/e-books/openshift-for-developers[*OpenShift for Developers 第2版*,window='_blank']
 
 [.bordershadow]
 image::further-resources-openshift-for-developers.png[link="self",window=_blank]
 
-* link:https://developers.redhat.com/e-books/path-gitops[*The Path to GitOps*,window=_blank]
+* link:https://developers.redhat.com/e-books/path-gitops[*GitOpsへの道*,window=_blank]
 
 [.bordershadow]
 image::further-resources-devops-with-openshift.png[link="self",window=_blank]
