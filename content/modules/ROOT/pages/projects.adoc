@@ -1,48 +1,48 @@
-= Projects
-:navtitle: Projects
+= プロジェクト
+:navtitle: プロジェクト
 
 include::vars.adoc[]
 
-== Understanding OpenShift Projects
+== OpenShift プロジェクトについて
 
-Projects are a fundamental concept in OpenShift that help you organize and manage your deployments. An OpenShift project allows a group of users (or individual users) to organize and manage their content in isolation from other groups. Each project has its own resources, policies (defining who can or cannot perform actions), and constraints (such as quotas and limits on resources).
+プロジェクトは、OpenShift における基本的な概念であり、デプロイメントの整理と管理に役立ちます。OpenShift プロジェクトを使用すると、ユーザーグループ（または個々のユーザー）は、他のグループから独立してコンテンツを整理および管理できます。各プロジェクトには、独自のリソース、ポリシー（アクションを実行できるユーザーと実行できないユーザーを定義）、制約（リソースのクォータや制限など）があります。
 
-Think of projects as a "wrapper" around all the application services and endpoints you (or your teams) are using for your work. Under the hood, OpenShift projects are built on top of Kubernetes namespaces, but the project abstractions provide administrators with additional features such as enhanaced role-based access controls (RBAC).
+プロジェクトは、あなた（またはあなたのチーム）が作業に使用しているすべてのアプリケーションサービスとエンドポイントを包む「ラッパー」と考えてください。OpenShift プロジェクトは、Kubernetes の Namespace(名前空間)上に構築されていますが、プロジェクトの抽象化により、管理者は強化されたロールベースアクセス制御 (RBAC) などの追加機能を利用できます。
 
-In this section, you'll explore how to work with projects using both the web console and command line interface. Don't worry if you don't understand all of the terminology—you'll cover these concepts in detail throughout the workshop.
+このセクションでは、Webコンソールとコマンドラインインターフェースの両方を使用してプロジェクトを操作する方法について説明します。すべての用語が理解できなくてもご安心ください。これらの概念については、ワークショップ全体を通して詳しく説明します。
 
-== Exploring Your Project in the Web Console
+== Webコンソールでプロジェクトを確認する
 
-A project named *{ocp4_starter_project}* has already been created for you. Start by exploring it through the link:{ocp4_starter_console_url}[web console,window='_blank'].
+*{ocp4_starter_project}* というプロジェクトがすでに作成されています。まずは link:{ocp4_starter_console_url}[Webコンソール,window='_blank'] からプロジェクトを確認してください。
 
-After logging in to the OpenShift web console, locate and select your project from the project dropdown. Take a moment to explore the project overview, which provides a summary of your project's resources and activity.
+OpenShift Webコンソールにログインしたら、プロジェクトのドロップダウンからプロジェクトを探して選択します。プロジェクトの概要を確認すると、プロジェクトのリソースとアクティビティの概要が表示されます。
 
 [.bordershadow]
 image::openshift-console-project.png[link="self",window=_blank]
 
-=== The Topology View
+=== Topology(トポロジー) View
 
-Familiarize yourself with the Topology perspective, which offers a visual representation of the applications and their components within your project.
+プロジェクト内のアプリケーションとそのコンポーネントを視覚的に表示するTopologyパースペクティブについて理解を深めましょう。
 
-From the left menu, navigate to *Workloads* and then to *Topology*.
+左側のメニューから *Workloads* に移動し、*Topology(トポロジー)* に移動します。
 
 [.bordershadow]
 image::openshift-console-topology.png[link="self",window=_blank]
 
-Currently, you won't see any applications or components since nothing has been deployed yet. As you progress through the workshop, you'll be able to visualize and interact with your application's components in this *Topology* view.
+まだ何もデプロイされていないため、アプリケーションやコンポーネントは表示されません。ワークショップを進めていくと、この *Topology(トポロジー)* Viewでアプリケーションのコンポーネントを視覚化し、操作できるようになります。
 
-== Working with Your Project via the Command Line
+== コマンドラインでのプロジェクトの操作
 
-You can also interact with your project using the OpenShift CLI, which provides powerful automation capabilities and access to advanced features.
+強力な自動化機能と高度な機能へのアクセスを提供するOpenShift CLIを使用してプロジェクトを操作することもできます。
 
-In your web terminal, switch to your project using the following command:
+Webターミナルで、次のコマンドを使用してプロジェクトに切り替えます。
 
 [source,role="copypaste",subs="attributes"]
 ----
 oc project {ocp4_starter_project}
 ----
 
-You should see output similar to the following:
+次のような出力が表示されます。
 
 [.console-output]
 [source,subs="attributes"]
@@ -50,10 +50,10 @@ You should see output similar to the following:
 Now using project "{ocp4_starter_project}" on server "{ocp4_starter_api_url}"
 ----
 
-This command sets your current context to work within your assigned project. All subsequent `oc` commands will operate within this project scope unless you specify otherwise.
+このコマンドは、現在のコンテキストを割り当てられたプロジェクト内で動作するように設定し、特に指定しない限り、以降のすべての `oc` コマンドはこのプロジェクトスコープ内で実行されます。
 
-== Next Steps
+== 次のステップ
 
-Throughout this workshop, you'll use both the web console and command line interface to deploy and manage applications within your project. The web console provides an intuitive visual interface for common tasks, while the CLI offers powerful automation capabilities for more advanced operations.
+このワークショプでは、Webコンソールとコマンドラインインターフェースの両方を使用して、プロジェクト内のアプリケーションをデプロイおよび管理します。Webコンソールは、一般的なタスクに直感的なビジュアルインターフェースを提供し、CLI はより高度な操作のための強力な自動化機能を提供します。
 
-Now that you're familiar with your project and how to access it through both interfaces, you're ready to start deploying applications!
+プロジェクトと、両方のインターフェースからプロジェクトにアクセスする方法を理解したので、アプリケーションのデプロイを開始する準備が整いました。
