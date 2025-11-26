@@ -1,23 +1,23 @@
-= ParksMap Architecture
-:navtitle: ParksMap Architecture
+= ParksMap のアーキテクチャ
+:navtitle: ParksMap のアーキテクチャ
 
 include::vars.adoc[]
 
-This section introduces you to the architecture of the ParksMap application, which you'll use throughout this workshop. Understanding the architecture will help you better unsderstand the tasks you'll perform from a developer's perspective. ParksMap is a polyglot geo-spatial data visualization application built using a microservices architecture. It consists of multiple services developed using different programming languages and frameworks.
+このセクションでは、このワークショップ全体で使用する ParksMap アプリケーションのアーキテクチャについて説明します。アーキテクチャを理解することで、開発者の視点から実行するタスクをより深く理解できるようになります。ParksMap は、マイクロサービスアーキテクチャを用いて構築された、多言語対応の地理空間データ可視化アプリケーションです。異なるプログラミング言語とフレームワークを用いて開発された複数のサービスで構成されています。
 
 [.bordershadow]
 image::roadshow-app-architecture.png[align="center",link="self",window=_blank]
 
-The main service is a web application with two key components:
+メインサービスは、2つの主要コンポーネントを持つウェブアプリケーションです。
 
-1. **Server-side component**: Aggregates geo-spatial APIs provided by multiple independent backend services.
-2. **Client-side component**: Built with JavaScript, it visualizes geo-spatial data on the map and communicates with the server-side using WebSockets to update the map in real-time.
+1. **サーバーサイドコンポーネント**: 複数の独立したバックエンドサービスによって提供される地理空間 API を集約します。
+2. **クライアントサイドコンポーネント**: JavaScript で構築され、地図上に地理空間データを視覚化し、WebSocket を使用してサーバー側と通信し、地図をリアルタイムで更新します。
 
-You'll deploy a set of independent backend services that provide various mapping and geo-spatial information, including:
+以下のサービスを含む、さまざまな地図情報と地理空間情報を提供する独立したバックエンドサービスのセットをデプロイします。
 
-* Worldwide National Parks
-* Major League Baseball Stadiums in North America
+* 世界中の国立公園
+* 北米のメジャーリーグのスタジアム
 
-The original source code for this application is located link:{ocp4_starter_roadshow_url}[here,window=_blank].
+このアプリケーションのオリジナルのソースコードは link:{ocp4_starter_roadshow_url}[ここ,window=_blank] にあります。
 
-The server-side component of the ParksMap web application acts as a communication gateway to all available backends. These backends are dynamically discovered using service discovery mechanisms provided by OpenShift, which will be discussed in more detail in the following sections.
+ParksMap Web アプリケーションのサーバーサイドコンポーネントは、利用可能なすべてのバックエンドへの通信ゲートウェイとして機能します。これらのバックエンドは、OpenShift が提供するサービスディスカバリ（Service Discovery）メカニズムを使用して動的に検出されます。これについては、以降のセクションで詳しく説明します。
