@@ -1,80 +1,64 @@
-= Application Healthchecks
-:navtitle: Application Healthchecks
+= アプリケーションヘルスチェック
+:navtitle: アプリケーションヘルスチェック
 
 include::vars.adoc[]
 
-== Background: Readiness and Liveness Probes
-As we have seen before in the UI via warnings, there is a concept of application
-health checks in OpenShift. These come in two flavors:
+== 背景: ReadinessプローブとLivenessプローブ
+以前、UI の警告で確認したように、OpenShift にはアプリケーションヘルスチェックという概念があります。これには 2 つの種類があります。
 
-* Readiness probe
-* Liveness probe
+* Readinessプローブ
+* Livenessプローブ
 
-From the
+ドキュメントの
 link:{ocp4_starter_openshift_docs}/html/building_applications/application-health[Application
-Health,window='_blank'] section of the documentation, we see the definitions:
+Health,window='_blank'] セクションでは、次のように定義が示されています。
 
 [glossary]
-Liveness Probe::
-  A liveness probe checks if the container in which it is configured is still
-  running. If the liveness probe fails, the kubelet kills the container, which
-  will be subjected to its restart policy. Set a liveness check by configuring
-  the `template.spec.containers.livenessprobe` stanza of a pod configuration.
-Readiness Probe::
-  A readiness probe determines if a container is ready to service requests. If
-  the readiness probe fails a container, the endpoints controller ensures the
-  container has its IP address removed from the endpoints of all services. A
-  readiness probe can be used to signal to the endpoints controller that even
-  though a container is running, it should not receive any traffic from a proxy.
-  Set a readiness check by configuring the
-  `template.spec.containers.readinessprobe` stanza of a pod configuration.
+Livenessプローブ::
+Livenessプローブは、それが設定されているコンテナがまだ実行中かどうかを確認します。Livenessプローブが失敗した場合、kubelet はコンテナを強制終了し、コンテナは再起動ポリシーに従います。Livenessプローブを設定するには、Pod設定の `template.spec.containers.livenessprobe` スタンザを設定します。
+    
+Readinessプローブ::
+Readinessプローブは、コンテナがリクエストを処理する準備ができているかどうかを判断します。Readinessプローブがコンテナで失敗した場合、エンドポイントコントローラーは、そのコンテナの IP アドレスがすべてのサービスのエンドポイントから削除されていることを確認します。Readinessプローブを使用すると、コンテナが実行中であっても、プロキシからのトラフィックを受信してははならないことをエンドポイントコントローラーに通知できます。
+Readinessプローブを設定するには、Pod設定の `template.spec.containers.readinessprobe` スタンザを設定します。
 
-It sounds complicated, but it really isn't. We will use the web console to add
-these probes to our `nationalparks` application.
+複雑に聞こえますが、実際にはそうではありません。Webコンソールを使用して、これらのプローブを
+`nationalparks` アプリケーションに追加します。
 
 [#add_health_checks]
-== Exercise: Add Health Checks
-As we are going to be implementing a realistic CI/CD pipeline, we will be doing
-some testing of the "development" version of the application. However, in order
-to test the app, it must be ready. This is where OpenShift's application health
-features come in very handy.
+== 演習: ヘルスチェックの追加
+現実的なCI/CDパイプラインを実装するため、アプリケーションの「開発」バージョンをテストします。ただし、テストを行うには、アプリケーションが準備完了している必要があります。ここで、OpenShiftのアプリケーションヘルスチェック機能が非常に役立ちます。
 
-We are going to add both a readiness and liveness probe to the existing
-`nationalparks` deployment. This will ensure that OpenShift does not add any
-instances to the service until they pass the readiness checks, and will ensure
-that unhealthy instances are restarted (if they fail the liveness checks).
+既存の `nationalparks` デプロイメントに、ReadinessプローブとLivenessプローブの両方を追加します。これにより、OpenShiftは、Readinessチェックに合格するまでインスタンスをサービスに追加せず、Livenessチェックに不合格となったインスタンスは再起動されます。
 
-From the *Topology* view, click `nationalparks`. On the side panel, click the *Actions* dropdown menu and the select *Add Health Checks*.
+*Topology* Viewで `nationalparks` をクリックします。サイドパネルで  *Actions* (アクション)ドロップダウンメニューをクリックし、*Add Health Checks* (ヘルスチェックの追加)を選択します。
 
 [.bordershadow]
 image::nationalparks-application-health-menu.png[link="self",window=_blank]
 
-Click to *Add Readiness Probe* and add in *Path* field: 
+*Add Readiness Probe* (Readinessプローブの追加)をクリックして *Path* (パス)フィールドに以下を追加します。 
 
 [source,role=copypaste]
 ----
 /ws/healthz/
 ----
 
-Leave all default settings like *Port* 8080 and *Type* HTTP GET. Click the little bottom-right confirmation gray tick to confirm:
+*Port* (ポート) `8080` と *Type* (タイプ) `HTTP GET` など、すべての設定をデフォルトのままにしておきます。右下の小さな灰色の確認チェックマークをクリックして確定します。
 
 [.bordershadow]
 image::nationalparks-application-health-settings.png[link="self",window=_blank]
-
-Repeat the same procedure for Liveness Probe, click to *Add Liveness Probe* and add in *Path* field: 
+ 
+Livenessプローブについても同じ手順を繰り返し、*Add Liveness Probe* (Livenessプローブの追加) をクリックして、*Path* (パス) フィールドに追加します。
 
 [source,role=copypaste]
 ----
 /ws/healthz/
 ----
 
-Leave all default settings like *Port* 8080 and *Type* HTTP GET. Click the little bottom-right confirmation gray tick to confirm.
+*Port* (ポート) `8080` と *Type* (タイプ) `HTTP GET` など、すべての設定をデフォルトのままにしておきます。右下の小さな灰色の確認チェックマークをクリックして確定します。
 
-Finally confirm all new changes clicking to *Add*:
+最後に *Add* (追加)をクリックしてすべての新しい変更を確定します。
 
 [.bordershadow]
 image::nationalparks-application-health-add.png[link="self",window=_blank]
 
-
-You will notice that these changes caused a new deployment -- they counted as a
-configuration change.
+これらの変更により新しいデプロイメントが発生し、設定変更としてカウントされたことがわかります。
