@@ -1,38 +1,38 @@
-= Binary Builds
-:navtitle: Binary Builds
+= バイナリビルド
+:navtitle: バイナリビルド
 
 include::vars.adoc[]
 
 [#moving_on_from_s2i]
-== Moving on From S2I
-As you saw before S2I is a great way to get from source code to a container, but the process is a bit too slow for daily fast iterative
-development. For example, if you want to change some CSS or change one method in a class you don't want to go through
-a full git commit and build cycle. In this lab we are going to show you a more efficient method for quick iteration. While
-we are at it we will also show you how to debug your code.
+== S2I からのステップアップ
+前述の通り、S2I はソースコードからコンテナへ移行する優れた方法ですが、日々の迅速な反復開発（iterative development）には少々遅すぎます。
+例えば、CSS を変更したり、クラス内のメソッドを 1 つ変更したりする場合、Git コミットとビルドのサイクル全体を実行したくはありません。
+このラボでは、迅速な反復開発（iterative development）のためのより効率的な方法を紹介します。
+ついでに、コードのデバッグ方法も紹介します。
 
-Now that we built the MLB parks service let's go ahead and make some quick changes.
+MLB Parksサービスをビルドしたので、早速変更を加えてみましょう。
 
 [#fast_iterative_code_change_using_binary_deploy]
-== Fast Iterative Code Change Using Binary Deploy
+== バイナリデプロイを使用した高速反復コード変更
 
-The OpenShift command line has the ability to do a deployment from your local machine. In this case we are going to use S2I,
-but we are going to tell OpenShift to just take the war file from our local machine and bake it in the image.
+OpenShift コマンドラインには、ローカルマシンからデプロイを行う機能があります。今回は S2I を使用しますが、OpenShift にローカルマシンから WARファイルを取得してイメージに組み込むように指示します。
 
-Doing this pattern of development lets us do quick builds on our local machine (benefitting from our local cache and
-all the horsepower on our machine) and then just quickly send up the war file.
+この開発パターンを採用することで、ローカルマシンで迅速にビルドを実行し（ローカルキャッシュとマシンのパワーを最大限に活用）、その後 WARファイルを素早く送信できます。
 
-NOTE: You could also use this pattern to actually send up your working directory to the S2I builder to have it do the Maven build
-on OpenShift. Using the local directory would relieve you from having Maven or any of the Java toolchain on your local
+NOTE: このパターンを使用して、作業ディレクトリを S2I ビルダーに送信し、OpenShift 上で Maven ビルドを実行することもできます。
+ローカルディレクトリを使用することで、ローカルマシンに Maven や Java ツールチェーンをインストールする必要がなくなります。
+
+
 // machine AND would also not require git commit with a push. Read more in the
 // {openshift-docs-url}/builds/basic-build-operations.html#builds-basic-start-source_basic-build-operations[official documentation]
 
 
 [#using_binary_deployment]
-== Exercise: Using Binary Deployment
+== 演習: バイナリデプロイメントの使用
 
 [#clone_source]
 === Clone source
-The first step is to clone the MLB source code from GitHub to your workshop environment:
+最初のステップは、GitHub からワークショップ環境に MLBソースコードをクローンすることです。
 
 [.console-input]
 [source,bash]
@@ -40,19 +40,19 @@ The first step is to clone the MLB source code from GitHub to your workshop envi
 git clone https://github.com/openshift-roadshow/mlbparks.git
 ----
 
-NOTE: We are using Intellij here in the guide for screenshots but this should work regardless of your tool chain. JBoss
-Developer Studio and JBoss Developer Tools have built in functionality that makes this close to seamless right from the IDE.
+NOTE: このガイドではスクリーンショットのためにIntelliJを使用していますが、ツールチェーンに関係なく動作するはずです。JBoss
+Developer StudioとJBoss Developer Toolsには、IDEからほぼシームレスに実行できる機能が組み込まれています。
 
 [#setup_the_build_of_the_war_file]
-=== Setup the Build of the WAR file
-If you have Maven all set up on your machine, then you can `cd` into the `mlbparks` directory and run `mvn package`
+=== WARファイルのビルド設定
+マシンにMavenがすべてセットアップされている場合は、`mlbparks` ディレクトリに `cd` して `mvn package` を実行してください。
 
 [#docker_for_maven]
 [TIP]
 ====
-If you don't have Maven on your machine but you are able to run docker, you can instead mount the repo directory and run the build commands from within the container.
+マシンに Maven がインストールされていないが、docker を実行できる場合は、代わりにリポジトリ ディレクトリをマウントし、コンテナー内からビルド コマンドを実行できます。
 
-. From within the directory that you ran `git clone` above, run the following command:
+. 上記の `git clone` を実行したディレクトリ内から、次のコマンドを実行します。
 +
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
@@ -60,7 +60,7 @@ If you don't have Maven on your machine but you are able to run docker, you can 
 docker run -it --rm --user 0 --name maven_builder -v ~/.kube:/home/jboss/.kube -v $(pwd):/workspaces -w /workspaces registry.access.redhat.com/ubi8/openjdk-11 /bin/bash
 ----
 +
-. Next, run this command (in the container) to locally install the latest version of `oc` on the container
+. 次に、このコマンドを（コンテナ内で）実行して、コンテナに最新バージョンの `oc` をローカルにインストールします。
 +
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
@@ -69,7 +69,7 @@ mkdir -p $HOME/bin && curl -L https://mirror.openshift.com/pub/openshift-v4/clie
     tar -xvzf - -C $HOME/bin/ oc && chmod 755 $HOME/bin/oc && ln -s $HOME/bin/oc $HOME/bin/kubectl
 ----
 +
-. Finally, ensure that you are still connected to your OpenShift cluster from within the builder container by running the following and comparing the output:
+. 最後に、次のコマンドを実行して出力を比較し、ビルダー コンテナー内から OpenShift クラスターにまだ接続されていることを確認します。
 +
 [.console-input]
 [source,bash,subs="+macros,+attributes"]
@@ -83,7 +83,7 @@ oc whoami --show-server
 https://{ocp4_starter_apps_domain}:30713
 ----
 
-Once completed, you should be able to follow the commands as they are outlined below.
+完了すると、以下に示すコマンドを実行できるようになります。
 ====
 
 [.console-input]
@@ -93,14 +93,14 @@ cd mlbparks
 mvn package
 ----
 
-Pay attention to the output location for the ROOT.war, we will need that directory later.
+ROOT.war の出力場所に注意してください。後でそのディレクトリが必要になります。
 
 [#code_change]
-=== Code Change
+=== コードの変更
 
-Time for a source code change! 
+ソースコードの変更です！
 
-Edit `BackendController` Java class from this path:
+次のパスから `BackendController` Java クラスを編集します。
 
 [.console-output]
 [source,bash]
@@ -108,21 +108,21 @@ Edit `BackendController` Java class from this path:
 src/main/java/com/openshift/evg/roadshow/rest/BackendController.java
 ----
 
-This is the REST endpoint that gives basic info on the service and can be reached at:
+これは、サービスに関する基本情報を提供する REST エンドポイントであり、次の URL からアクセスできます。
 
 [source,bash,role="copypaste",subs="+attributes"]
 ----
 http://mlbparks-{ocp4_starter_project}.{ocp4_starter_apps_domain}/ws/info/
 ----
 
-Please change line 23 to add a _AMAZING_ in front of "MLB Parks" look like this:
+23 行目を変更して、"MLB Parks" の前に _AMAZING_ を追加してください。次のようになります。
 
 [source,java]
 ----
 return new Backend("mlbparks", "AMAZING MLB Parks", new Coordinates("39.82", "-98.57"), 5);
 ----
 
-Don't forget to save the file and run `mvn package` again from the root of the source folder: 
+ファイルを保存し、ソース フォルダーのルートから `mvn package` を再度実行することを忘れないでください。
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
@@ -131,11 +131,11 @@ mvn package
 ----
 
 [#doing_the_binary_build]
-=== Doing the Binary Build
+=== バイナリビルドの実行
 
-Alright we have our war file built, time to kick off a build using it.
+WAR ファイルがビルドされたので、ビルドを開始しましょう。
 
-If you built your war with Maven:
+Maven を使って WAR ファイルをビルドした場合:
 
 [.console-input]
 [source,bash,subs="+attributes,macros+"]
@@ -143,18 +143,17 @@ If you built your war with Maven:
 oc start-build bc/mlbparks --from-file=target/ROOT.war --follow
 ----
 
-NOTE: The --follow is optional if you want to follow the build output in your terminal.
+NOTE: ターミナルでビルド出力を追跡する場合、--follow はオプションです。
 
-Using labels and a recreate deployment strategy, as soon as the new deployment finishes the map name will be updated. Under a recreate deployment strategy we first tear down the pod before doing our new deployment.
-When the pod is torn down, the parksmap service removes the MLBParks map from the layers. When it comes back up, the layer
-automatically gets added back with our new title.  This would not have happened with a rolling deployment because
-rolling spins up the new version of the pod before it takes down the old one. Rolling strategy enables a zero-downtime deployment.
+ラベルと再作成デプロイメント戦略を使用すると、新しいデプロイメントが完了するとすぐにマップ名が更新されます。再作成デプロイメント戦略では、新しいデプロイメントを行う前にまずPodを破棄します。
+Podが破棄されると、parksmap サービスは MLBParks マップをレイヤーから削除します。Podが復旧すると、レイヤーは新しいタイトルで自動的に追加されます。ローリングデプロイメントでは、このようなことは起こりません。
+ローリングでは、古いPodを削除する前に新しいバージョンのPodを起動するためです。ローリング戦略により、ダウンタイムゼロのデプロイメントが可能になります。
 
-You can follow the deployment in progress from Topology view, and when it is completed, you will see the new content at:
+Topology Viewからデプロイメントの進行状況を追跡でき、完了すると、新しいコンテンツが次の場所に表示されます。 
 
 [source,bash,role="copypaste",subs="+attributes"]
 ----
 http://mlbparks-{ocp4_starter_project}.{ocp4_starter_apps_domain}/ws/info/
 ----
 
-So now you have seen how we can speed up the build and deploy process.
+これで、ビルドとデプロイのプロセスをスピードアップする方法がわかりました。
