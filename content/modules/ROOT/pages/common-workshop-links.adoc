@@ -3,12 +3,12 @@
 
 include::vars.adoc[]
 
-You can find all urls, hostnames, usernames and passwords that are needed during the workshop in this page.
+ワークショップ中に必要なすべてのURL、ホスト名、ユーザー名、パスワードはこのページに記載されています。
 
-Note that the urls are also embedded inside the labs so that you don't have to go back and forth between this page and the labs.
+URLはラボ内にも埋め込まれているため、このページとラボを行き来する必要はありません。
 
 [#openshift_cluster_url]
-== OpenShift Cluster URL
+== OpenShiftクラスタURL
 
 *URL*: link:{ocp4_starter_console_url}[{ocp4_starter_console_url},window='_blank']
 
@@ -16,7 +16,7 @@ Note that the urls are also embedded inside the labs so that you don't have to g
 *Password*: {ocp4_starter_password}
 
 [#git_server]
-== Git Server
+== Gitサーバー
 
 *URL*: link:{ocp4_starter_gitea_url}[{ocp4_starter_gitea_url},window='_blank']
 
@@ -24,6 +24,6 @@ Note that the urls are also embedded inside the labs so that you don't have to g
 *Password*: {ocp4_starter_gitea_password}
 
 [#workshop_guides]
-== Workshop Guides
+== ワークショップガイド
 
 *URL*: link:{ocp4_starter_showroom_url}[{ocp4_starter_showroom_url},window='_blank']
