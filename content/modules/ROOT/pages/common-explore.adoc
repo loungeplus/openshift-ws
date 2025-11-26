@@ -3,46 +3,46 @@
 
 include::vars.adoc[]
 
-OpenShift provides two primary interfaces for interacting with the platform: a web-based console for visual management and a command-line interface for scripting and advanced operations. In this section, you'll learn how to access and use both tools effectively.
+OpenShift は、プラットフォームを操作するための 2 つの主要なインターフェースを提供しています。視覚的な管理のための Web ベースのコンソールと、スクリプトや高度な操作のためのコマンドラインインターフェースです。このセクションでは、両方のツールに効果的にアクセスして使用する方法を学習します。
 
 [#the_web_console]
-== The Web Console
+== Webコンソール
 
-The OpenShift Console provides an intuitive graphical interface for managing your projects, applications, and cluster resources. It's accessible from any modern web browser and is designed to simplify common administrative and development tasks.
+OpenShift Webコンソールは、プロジェクト、アプリケーション、クラスターリソースを管理するための直感的なグラフィカルインターフェースを提供します。最新の Web ブラウザーからアクセスでき、一般的な管理タスクと開発タスクを簡素化するように設計されています。
 
-=== Accessing the OpenShift Web Console
+=== OpenShift Webコンソールへのアクセス
 
 [.bordershadow]
 image::openshift-console-login.png[width=500,link="self",window=_blank]
 
-To access the OpenShift Console, navigate to the following URL in your browser and log in using the provided credentials:
+OpenShift Webコンソールにアクセスするには、ブラウザで以下の URL にアクセスし、指定された認証情報を使用してログインしてください。
 
-*Console URL:* link:{ocp4_starter_console_url}[{ocp4_starter_console_url},window='_blank']
+*コンソール URL:* link:{ocp4_starter_console_url}[{ocp4_starter_console_url},window='_blank']
 
-*Username:* `{user}`
+*ユーザー名:* `{user}`
 
-*Password:* `{ocp4_starter_password}`
+*パスワード:* `{ocp4_starter_password}`
 
-Once logged in, you'll see the main dashboard where you can view your projects and navigate through the platform's features.
+ログインすると、メインダッシュボードが表示され、プロジェクトを確認したり、プラットフォームの各機能を操作したりできます。
 
 [.bordershadow]
 image::openshift-console-dashboard.png[link="self",window=_blank]
 
 [#command_line_interface]
-== Command Line Interface
+== コマンドラインインターフェース
 
-While the web console is excellent for visual management, the OpenShift CLI (`oc`) provides powerful automation capabilities and access to advanced features. The CLI is a single executable written in Go and is available for Microsoft Windows, macOS, and Linux.
+Webコンソールは視覚的な管理に最適ですが、OpenShift CLI (`oc`) は強力な自動化機能と高度な機能へのアクセスを提供します。CLIはGo言語で記述された単一の実行ファイルで、Microsoft Windows、macOS、Linuxで利用できます。
 
-=== Verifying the CLI Installation
+=== CLIのインストールの確認
 
-The CLI has been pre-installed in your workshop environment. Verify it's available and check the version:
+CLIはワークショップ環境にプリインストールされています。利用可能であること、およびバージョンを確認してください。
 
 [source,role="copypaste",subs="attributes"]
 ----
 oc version
 ----
 
-You should see output similar to this:
+次のような出力が表示されます。
 
 [.console-output]
 [source,subs="attributes"]
@@ -52,38 +52,38 @@ Kustomize Version: v5.5.0
 Kubernetes Version: v1.32.6
 ----
 
-=== Logging in with the CLI
+=== CLI を使用したログイン
 
-Authenticate with the OpenShift cluster using the command line:
+コマンドラインを使用して OpenShift クラスターに認証します。
 
 [source,role="copypaste",subs="attributes"]
 ----
 {ocp4_starter_login}
 ----
 
-This command authenticates you to the cluster using your username and password. 
+このコマンドは、ユーザー名とパスワードを使用してクラスターへの認証を行います。
 
-NOTE: If you get a message "certificate signed by unknown authority", you can ignore it for this workshop environment.
-It indicates that the cluster's API certificate is self-signed, which is common in development and testing environments.
+NOTE: 「The server uses a certificate signed by an unknown authority.」というメッセージが表示された場合、このワークショップ環境では無視してかまいません。*y* を入力して進みます。
+これは、クラスターの API 証明書が自己署名されていることを示しています。これは開発環境やテスト環境では一般的です。
 
 [.bordershadow]
 
-TIP: Alternatively, you can use a token for authentication. To obtain a token, use the **Copy login command** option in the OpenShift Web Console as shown.
+TIP: 認証にはトークンを使用することもできます。トークンを取得するには、OpenShift Webコンソールで **Copy login command** (ログインコマンドのコピー)オプションを使用します (図を参照)。
 
 [.bordershadow]
 image::openshift-console-login-command.png[link="self",window=_blank]
 
-=== Verifying Your Access
+=== アクセスの確認
 
-Let's confirm that you're properly authenticated and can access your assigned resources.
+適切に認証され、割り当てられたリソースにアクセスできることを確認しましょう。
 
-First, verify your login credentials:
+まず、ログイン認証情報を確認してください。
 [source,role="copypaste",subs="attributes"]
 ----
 oc whoami
 ----
 
-Your username should be displayed:
+ユーザー名が表示されます。
 
 [.console-output]
 [source,subs="attributes"]
@@ -91,13 +91,13 @@ Your username should be displayed:
 {ocp4_starter_username}
 ----
 
-Next, verify that you can view the project(s) assigned to you:
+次に、自分に割り当てられたプロジェクトが表示されていることを確認してください。
 [source,role="copypaste",subs="attributes"]
 ----
 oc projects
 ----
 
-Output similar to the following example should be displayed:
+以下の例のような出力が表示されます。
 
 [.console-output]
 [source,subs="attributes"]
@@ -107,4 +107,4 @@ You have one project on this server: "Workspace ({ocp4_starter_project})".
 Using project "{ocp4_starter_project}" on server "{ocp4_starter_api_url}".
 ----
 
-Great! You now have access to OpenShift through both the web console and command line interface. In the following sections, you'll use these tools to deploy and manage applications on the platform.
+完了です！これで、Webコンソールとコマンドラインインターフェースの両方から OpenShift にアクセスできるようになりました。以降のセクションでは、これらのツールを使用して、プラットフォーム上でアプリケーションをデプロイおよび管理する方法を説明します。
